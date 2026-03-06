@@ -163,3 +163,90 @@ openclaw dashboard
 
 如果 OpenClaw 能正确执行命令并返回结果，说明一切正常。
 
+## 7. 常用命令
+
+```bash
+# 查看 Gateway 状态
+openclaw status
+
+# 启动 Gateway
+openclaw gateway start
+
+# 停止 Gateway
+openclaw gateway stop
+
+# 重启 Gateway
+openclaw gateway restart
+
+# 打开 Web 控制面板
+openclaw dashboard
+
+# 查看配置
+openclaw config get
+
+# 修改配置
+openclaw config set <key> <value>
+
+# 查看日志
+openclaw logs
+
+# 查看版本
+openclaw --version
+```
+
+## 8. 常见问题
+
+**Q: OpenClaw 只会聊天不干活，让它执行命令却只给建议？**
+
+A: 这是 2026.3.2 版本后最常见的问题，原因是 Tools Profile 被设置成了 messaging。有两种修复方法：
+
+方法一：命令行修复（推荐）
+
+```bash
+# 查看当前 profile
+openclaw config get tools
+
+# 如果不是 full，切换成 full
+openclaw config set tools.profile full
+
+# 重启 gateway
+openclaw gateway restart
+```
+
+方法二：Web 界面修复
+
+1. 访问 http://localhost:18789（本地模式默认端口）
+2. 点击左侧"配置"或"Agents"
+3. 找到对应的 Agent，点击旁边的"tools"
+4. 选择"Full"选项
+5. 保存并重启
+
+或者直接编辑配置文件，找到 tools 部分改成：
+
+```json
+"tools": {
+  "profile": "full"
+}
+```
+
+**Q: 提示"API key not found"怎么办？**
+
+A: 编辑配置文件 `~/.openclaw/config.yaml`，在对应的提供商下添加 API 密钥。例如：
+
+```yaml
+llm:
+  provider: claude
+  api_key: sk-ant-xxxxx
+```
+
+**Q: Web 面板无法访问？**
+
+A: 检查防火墙设置，确保端口 18789 未被占用。可以在配置文件中修改端口号。
+
+**Q: 命令执行失败？**
+
+A: 确认 OpenClaw 有足够的文件系统权限。某些操作可能需要明确授权。
+
+---
+
+**下一步**：[第二章 移动端接入](/cn/adopt/chapter2)
