@@ -253,22 +253,30 @@ openclaw config set channels.telegram.customKeyboard '[["/status","/logs"],["/ba
 
 在移动端输入长指令不方便，可以在配置文件中设置快捷命令：
 
-```yaml
-shortcuts:
-  /status: "检查服务器状态，包括 CPU、内存、磁盘使用情况"
-  /logs: "显示最近 50 行应用日志"
-  /backup: "执行数据库备份并上传到云存储"
-  /deploy: "拉取最新代码并重启服务"
+```json
+// openclaw.json
+{
+  "shortcuts": {
+    "/status": "检查服务器状态，包括 CPU、内存、磁盘使用情况",
+    "/logs": "显示最近 50 行应用日志",
+    "/backup": "执行数据库备份并上传到云存储",
+    "/deploy": "拉取最新代码并重启服务"
+  }
+}
 ```
 
 这样你只需要发送 `/status`，OpenClaw 就会执行完整的检查流程。这些快捷命令本质上是预定义的 prompt，OpenClaw 会把它们展开成完整的指令再执行。
 
 你还可以设置带参数的快捷命令：
 
-```yaml
-shortcuts:
-  /search: "在项目中搜索包含 {query} 的文件"
-  /git: "执行 git 命令: {command}"
+```json
+// openclaw.json
+{
+  "shortcuts": {
+    "/search": "在项目中搜索包含 {query} 的文件",
+    "/git": "执行 git 命令: {command}"
+  }
+}
 ```
 
 使用时这样调用：`/search TODO` 或 `/git status`。
@@ -292,13 +300,18 @@ shortcuts:
 
 在配置中启用语音识别：
 
-```yaml
-channels:
-  telegram:
-    enabled: true
-    bot_token: "xxxxx"
-    voice_recognition: true
-    language: "zh-CN"  # 语音识别语言
+```json
+// openclaw.json
+{
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "botToken": "xxxxx",
+      "voiceRecognition": true,
+      "language": "zh-CN"
+    }
+  }
+}
 ```
 
 发送语音消息后，OpenClaw 会先回复"正在识别语音..."，然后显示识别出的文字，最后执行指令并返回结果。
@@ -311,13 +324,13 @@ channels:
 
 **敏感操作二次确认**：对于删除文件、修改配置、重启服务等危险操作，可以设置二次确认：
 
-```yaml
-security:
-  require_confirmation:
-    - "delete"
-    - "rm"
-    - "restart"
-    - "shutdown"
+```json
+// openclaw.json
+{
+  "security": {
+    "requireConfirmation": ["delete", "rm", "restart", "shutdown"]
+  }
+}
 ```
 
 当你发送包含这些关键词的指令时，OpenClaw 会先询问"确定要执行吗？回复 yes 确认"，只有收到确认后才会真正执行。
@@ -336,14 +349,20 @@ openclaw logs --channel telegram --last 100
 
 在配置中可以为不同渠道设置不同的权限：
 
-```yaml
-channels:
-  feishu:
-    enabled: true
-    allowed_operations: ["read", "write", "execute"]
-  telegram:
-    enabled: true
-    allowed_operations: ["read", "execute"]  # 不允许写入
+```json
+// openclaw.json
+{
+  "channels": {
+    "feishu": {
+      "enabled": true,
+      "allowedOperations": ["read", "write", "execute"]
+    },
+    "telegram": {
+      "enabled": true,
+      "allowedOperations": ["read", "execute"]
+    }
+  }
+}
 ```
 
 这样可以实现更细粒度的权限控制，比如在 Telegram 上只能查询信息，不能修改文件。

@@ -93,43 +93,88 @@ openclaw onboard --install-daemon
 
 ### 4.1 选择模型提供商
 
-向导首先会询问你使用哪个 AI 模型：
+向导首先会询问你使用哪个 AI 模型。
+
+**国内用户强烈推荐硅基流动（SiliconFlow）**——新注册用户可获得 **16 元免费算力券**，足够完成本教程的全部练习，无需国际信用卡。
+
+| 推荐路径 | 适合用户 | 费用 |
+|---------|---------|------|
+| **硅基流动 SiliconFlow** | 国内用户（首选） | 新用户 16 元免费 |
+| DeepSeek | 国内用户（备选） | 支付宝充值，按量计费 |
+| Anthropic / OpenAI | 国际用户 | 需国际信用卡 |
+
+### 4.2 获取 API Key：以硅基流动为例
+
+> 如果你已有其他提供商的 API Key，可跳过本节，直接看 4.3。
+
+**第一步：注册账号**
+
+1. 访问 [硅基流动官网](https://cloud.siliconflow.cn)
+2. 点击右上角"注册"，使用手机号注册（也支持微信扫码登录）
+3. 注册成功后自动获得 **16 元免费算力券**
+
+<!-- TODO: 补充硅基流动注册页面截图 -->
+
+**第二步：创建 API 密钥**
+
+1. 登录后进入 [控制台](https://cloud.siliconflow.cn/account/ak)
+2. 左侧菜单选择"API 密钥"
+3. 点击"创建新 API 密钥"
+4. 复制生成的密钥（以 `sk-` 开头）
+
+<!-- TODO: 补充 API 密钥创建页面截图 -->
+
+> **重要**：API 密钥只会显示一次，请立即复制保存到安全的地方。如果丢失，需要重新创建。
+
+**第三步：充值（可选）**
+
+免费额度用完后，在控制台"费用中心"充值，支持支付宝和微信支付。
+
+> **费用参考**：使用 DeepSeek V3 模型，16 元约可进行 800-1500 次对话。日常轻度使用每月 10-30 元足够。
+
+<details>
+<summary>其他提供商的 API Key 获取方式</summary>
+
+- **DeepSeek**：访问 https://platform.deepseek.com ，注册后在控制台创建密钥，支持支付宝充值
+- **OpenRouter**：访问 https://openrouter.ai ，一个 Key 可访问多家模型
+- **Anthropic**：访问 https://console.anthropic.com ，需要国际信用卡
+- **OpenAI**：访问 https://platform.openai.com ，需要国际信用卡
+
+</details>
+
+### 4.3 在向导中配置
+
+在配置向导中选择提供商，然后输入 API Key：
 
 ```
 ◇  Model/auth provider
-│  ● Anthropic (Claude)
+│  ○ Anthropic (Claude)
 │  ○ OpenAI (GPT)
-│  ○ DeepSeek（国内推荐）
-│  ○ OpenRouter（聚合多家模型）
+│  ○ DeepSeek
+│  ○ OpenRouter
+│  ● Custom（自定义 API 端点）← 硅基流动选这个
 ```
 
-**国内用户推荐**：
-- **DeepSeek**：国内服务商，支持支付宝充值，注册即用
-- **OpenRouter**：一个 Key 访问多家模型，支持多种支付方式
+选择 `Custom` 后，按提示输入：
 
-**国际用户**：选择 Anthropic 或 OpenAI，需要国际信用卡。
+- **API Base URL**：`https://api.siliconflow.cn/v1`
+- **API Key**：粘贴你刚才复制的密钥
+- **默认模型**：`deepseek-ai/DeepSeek-V3`（推荐）
 
-### 4.2 输入 API Key
+也可以跳过向导，后续通过命令行手动配置：
 
-根据选择的提供商输入 API Key：
-
+```bash
+openclaw config set llm.provider "siliconflow"
+openclaw config set llm.baseUrl "https://api.siliconflow.cn/v1"
+openclaw config set llm.apiKey "sk-xxxxx"
+openclaw config set llm.default "deepseek-ai/DeepSeek-V3"
 ```
-◇  DeepSeek API key
-│  （粘贴你的 API Key）
-```
 
-获取 API Key：
-
-- DeepSeek: https://platform.deepseek.com
-- OpenRouter: https://openrouter.ai
-- Anthropic: https://console.anthropic.com
-- OpenAI: https://platform.openai.com
-
-### 4.3 配置聊天渠道（可选）
+### 4.4 配置聊天渠道（可选）
 
 向导会询问是否配置 Slack、Telegram 等聊天渠道。如果暂时不需要，可以选择跳过，后续通过 `openclaw configure` 添加。
 
-### 4.4 配置技能（可选）
+### 4.5 配置技能（可选）
 
 向导会显示可用的技能列表，询问是否安装。建议先跳过，等熟悉基本操作后再安装。
 
@@ -155,40 +200,38 @@ openclaw dashboard
 
 ## 6. 第一次对话
 
-在控制面板输入：
+在控制面板试试以下指令：
 
 ```
-帮我列出当前目录的文件
+帮我创建一个文件叫 hello.txt，写上今天的日期和"Hello from OpenClaw!"
 ```
 
-如果 OpenClaw 能正确执行命令并返回结果，说明一切正常。
+如果 OpenClaw 成功创建了文件并告诉你完成，恭喜，一切就绪！再试试更有趣的：
 
-## 7. 推荐配置：Coding Plan 模式
-
-**重要提示**：OpenClaw 在执行复杂任务时会消耗大量 token。如果对话持续很久，上下文会变得很长，API 费用会快速增加。为了控制成本和提高效率，强烈推荐启用 Coding Plan 模式。
-
-### 7.1 什么是 Coding Plan
-
-Coding Plan 是一种订阅服务，由阿里云百炼、智谱 GLM、联通云等平台提供，以固定月费访问多个编码优化的 AI 模型。相比按 token 计费，这种方式更经济实惠。
-
-### 7.2 配置方法
-
-1. 重新运行配置向导：
-
-```bash
-openclaw configure
+```
+用 Python 写一个猜数字小游戏，保存为 game.py 并运行它
 ```
 
-2. 在向导中：
-   - 选择你的 Coding Plan 提供商（如阿里云百炼、智谱 GLM）
-   - 输入从订阅服务获取的 API Key
-   - 选择启用 Coding Plan 模式
+> **提示**：如果 OpenClaw 只给建议而不执行命令，参见本章末尾 FAQ 的"Tools Profile"问题。
 
-3. 或者通过 Web UI 配置：
-   - 打开控制面板：`openclaw dashboard`
-   - 进入"配置" → "All Settings" → "RAW"
-   - 在 `models` 配置中添加你的 Coding Plan 提供商信息
-   - 保存并重启 Gateway
+## 7. 费用与成本控制
+
+使用硅基流动的 16 元免费额度，足够你完成前几章的学习。日常使用的费用取决于你的调用频率和模型选择。
+
+**省钱技巧**：
+- 简单任务用小模型（如 Qwen2.5-7B），复杂任务才用大模型（如 DeepSeek V3）
+- 第七章会详细介绍多模型路由和成本优化策略
+
+<details>
+<summary>进阶：Coding Plan 订阅模式（适合重度用户）</summary>
+
+如果你每天大量使用 OpenClaw，按 Token 计费可能不够经济。一些平台提供固定月费的 Coding Plan 订阅服务（如阿里云百炼、智谱 GLM），以包月价格访问编码优化模型。
+
+配置方法：运行 `openclaw configure`，在向导中选择 Coding Plan 提供商并输入订阅 API Key。也可以在 Web 控制面板"配置" → "All Settings" 中手动添加。
+
+> 对于大多数用户，硅基流动的按量计费已经足够经济，不需要订阅 Coding Plan。
+
+</details>
 
 ## 8. 常用命令
 
@@ -275,7 +318,7 @@ openclaw logs --follow
 openclaw logs
 ```
 
-## 8. 常见问题
+## 9. 常见问题
 
 **Q: OpenClaw 只会聊天不干活，让它执行命令却只给建议？**
 
@@ -312,13 +355,15 @@ openclaw gateway restart
 
 **Q: 提示"API key not found"怎么办？**
 
-A: 编辑配置文件 `openclaw.json`，在对应的提供商下添加 API 密钥。例如：
+A: 编辑配置文件 `openclaw.json`，确保 API 密钥配置正确。例如使用硅基流动：
 
 ```json
 {
   "llm": {
-    "provider": "anthropic",
-    "apiKey": "sk-ant-xxxxx"
+    "provider": "siliconflow",
+    "baseUrl": "https://api.siliconflow.cn/v1",
+    "apiKey": "sk-xxxxx",
+    "default": "deepseek-ai/DeepSeek-V3"
   }
 }
 ```

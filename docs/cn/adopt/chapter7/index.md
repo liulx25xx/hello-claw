@@ -8,6 +8,8 @@ OpenClaw 不绑定任何单一 LLM 提供商。你可以同时配置 Claude、GP
 
 | 提供商 | 模型 | 特点 | 适合任务 |
 |--------|------|------|---------|
+| **SiliconFlow** | `siliconflow/deepseek-ai/DeepSeek-V3` | **国内推荐**，新用户 16 元免费 | 通用编码、中文任务 |
+| SiliconFlow | `siliconflow/Qwen/Qwen2.5-72B-Instruct` | 中文能力突出 | 中文写作、翻译 |
 | Anthropic | `anthropic/claude-opus-4-6` | 最强推理，200K 上下文 | 复杂分析、架构设计 |
 | Anthropic | `anthropic/claude-sonnet-4-6` | 均衡性能 | 日常编码、文档生成 |
 | Anthropic | `anthropic/claude-haiku-4-5` | 速度快、成本低 | 简单查询、格式转换 |
@@ -15,7 +17,9 @@ OpenClaw 不绑定任何单一 LLM 提供商。你可以同时配置 Claude、GP
 | OpenAI | `openai/gpt-4o` | 多模态支持 | 图片理解、语音处理 |
 | Google | `google/gemini-3-pro` | 1M 上下文 | 大文件分析 |
 
-> **模型标识格式**：OpenClaw 统一使用 `provider/model-name` 格式标识模型。目前支持 12 个官方提供商：Ollama、OpenAI、Anthropic、OpenRouter、Amazon Bedrock、Vercel AI Gateway、Moonshot AI、MiniMax、OpenCode Zen、GLM、Z.AI、Synthetic。
+> **模型标识格式**：OpenClaw 统一使用 `provider/model-name` 格式标识模型。目前支持 12+ 个官方提供商：Ollama、OpenAI、Anthropic、OpenRouter、SiliconFlow、Amazon Bedrock、Vercel AI Gateway、Moonshot AI、MiniMax、OpenCode Zen、GLM、Z.AI、Synthetic。
+>
+> **国内用户推荐**：[硅基流动（SiliconFlow）](https://cloud.siliconflow.cn)提供 OpenAI 兼容 API，新注册用户赠送 16 元算力券，支持支付宝/微信充值。详见第一章 4.2 节。
 
 ### 1.2 本地模型（Ollama）
 
@@ -57,16 +61,17 @@ openclaw config set llm.fallback "gpt-4o"
 // openclaw.json
 {
   "llm": {
-    "default": "anthropic/claude-sonnet-4-6",
-    "fallback": "openai/gpt-4o",
+    "default": "siliconflow/deepseek-ai/DeepSeek-V3",
+    "fallback": "anthropic/claude-sonnet-4-6",
     "providers": {
+      "siliconflow": {
+        "baseUrl": "https://api.siliconflow.cn/v1",
+        "apiKey": "sk-xxxxx",
+        "models": ["deepseek-ai/DeepSeek-V3", "Qwen/Qwen2.5-72B-Instruct"]
+      },
       "anthropic": {
         "apiKey": "sk-ant-xxxxx",
         "models": ["claude-opus-4-6", "claude-sonnet-4-6", "claude-haiku-4-5"]
-      },
-      "openai": {
-        "apiKey": "sk-xxxxx",
-        "models": ["gpt-5", "gpt-4o"]
       },
       "ollama": {
         "baseUrl": "http://localhost:11434",
@@ -219,8 +224,9 @@ openclaw usage --by-skill
 |---------|---------|-----------|
 | 全部 Opus | 100 次 | ~$150-300 |
 | 全部 Sonnet | 100 次 | ~$30-60 |
-| 混合路由 | 100 次 | ~$15-30 |
-| 本地 + 云端回退 | 100 次 | ~$5-10 |
+| **硅基流动 DeepSeek V3** | 100 次 | **~¥20-50** |
+| 混合路由（硅基流动 + Opus） | 100 次 | ~¥30-80 |
+| 本地 Ollama + 云端回退 | 100 次 | ~¥5-15 |
 
 ## 6. 常见问题
 
