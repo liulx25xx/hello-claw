@@ -9,6 +9,30 @@
 - **内存**：至少 1GB，推荐 4GB
 - **端口**：18789 需要可用
 
+<details>
+<summary>Windows 用户：什么是 WSL2？如何安装？</summary>
+
+WSL2（Windows Subsystem for Linux 2）让你在 Windows 上运行完整的 Linux 环境，很多开发工具在 Linux 下兼容性更好。**如果你不想折腾，也可以直接在 Windows 下使用 PowerShell，跳过此步骤。**
+
+**安装步骤**（需要 Windows 10 2004 及以上版本，或 Windows 11）：
+
+1. 以管理员身份打开 PowerShell（右键开始菜单 → "终端(管理员)"或"PowerShell(管理员)"）
+2. 运行以下命令，一键安装 WSL2 和 Ubuntu：
+
+```powershell
+wsl --install
+```
+
+3. 安装完成后**重启电脑**
+4. 重启后会自动弹出 Ubuntu 窗口，按提示设置用户名和密码
+5. 设置完成后，你就拥有了一个 Linux 终端环境
+
+之后在开始菜单搜索"Ubuntu"即可打开 WSL2 终端。本教程后续的 `bash` 命令都可以在这个终端中运行。
+
+> **提示**：如果 `wsl --install` 报错，可能需要先在"控制面板 → 程序 → 启用或关闭 Windows 功能"中勾选"适用于 Linux 的 Windows 子系统"和"虚拟机平台"，然后重启电脑再试。
+
+</details>
+
 检查 Node.js 版本：
 
 ```bash
@@ -16,6 +40,16 @@ node --version
 ```
 
 如果版本低于 22，需要先升级 Node.js。
+
+> **什么是终端（Terminal）？**
+>
+> 本教程的很多操作需要在"终端"中输入命令。终端是一个文字界面，你输入命令，电脑执行。不同操作系统打开终端的方式不同：
+>
+> - **Windows**：按 `Win + X`，选择"终端"或"PowerShell"；或在开始菜单搜索"PowerShell"
+> - **macOS**：按 `Cmd + 空格`，搜索"Terminal"并打开；或在"应用程序 → 实用工具"中找到"终端"
+> - **Linux**：按 `Ctrl + Alt + T`；或在应用菜单中搜索"Terminal"
+>
+> 打开后你会看到一个黑色（或白色）的窗口，里面有一个闪烁的光标，这就是终端。后续所有 `bash` 代码块中的命令都在这里输入。
 
 ## 2. 安装 Node.js
 
@@ -101,7 +135,8 @@ openclaw onboard --install-daemon
 |---------|---------|------|
 | **硅基流动 SiliconFlow** | 国内用户（首选） | 新用户 16 元免费 |
 | DeepSeek | 国内用户（备选） | 支付宝充值，按量计费 |
-| Kimi / MiniMax | 国内用户（其他选择） | 支持支付宝 |
+| Qwen（通义千问） | 国内用户（备选） | 阿里云生态，企业级支持 |
+| Kimi / StepFun / MiniMax | 国内用户（其他选择） | 支持支付宝 |
 
 ### 4.2 获取 API Key：以硅基流动为例
 
@@ -136,7 +171,9 @@ openclaw onboard --install-daemon
 <summary>其他提供商的 API Key 获取方式</summary>
 
 - **DeepSeek（深度求索）**：访问 https://platform.deepseek.com ，注册后在控制台创建密钥，支持支付宝充值
+- **Qwen（通义千问）**：访问 https://dashscope.console.aliyun.com ，阿里云旗下，中文能力突出，企业级支持
 - **Kimi（月之暗面）**：访问 https://platform.moonshot.cn ，国内团队，中文理解能力强
+- **StepFun（阶跃星辰）**：访问 https://platform.stepfun.com ，多模态能力强，支持长上下文
 - **MiniMax（稀宇科技）**：访问 https://platform.minimaxi.com ，支持语音和多模态
 - **OpenRouter**：访问 https://openrouter.ai ，一个 Key 可访问多家模型
 

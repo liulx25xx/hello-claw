@@ -11,10 +11,12 @@ OpenClaw 不绑定任何单一 LLM 提供商。你可以同时配置 Claude、GP
 | **SiliconFlow** | `siliconflow/deepseek-ai/DeepSeek-V3` | **国内推荐**，新用户 16 元免费 | 通用编码、中文任务 |
 | SiliconFlow | `siliconflow/Qwen/Qwen2.5-72B-Instruct` | 中文能力突出 | 中文写作、翻译 |
 | DeepSeek | `deepseek/deepseek-chat` | 编码能力强 | 代码生成、调试 |
+| Qwen（通义千问） | `qwen/qwen-max` | 阿里云生态，中文能力强 | 中文写作、企业应用 |
 | Kimi | `moonshot/moonshot-v1-128k` | 128K 长上下文 | 长文档分析 |
+| StepFun（阶跃星辰） | `stepfun/step-2-16k` | 多模态、长上下文 | 图片理解、复杂推理 |
 | MiniMax | `minimax/abab6.5s-chat` | 多模态支持 | 语音、图片处理 |
 
-> **模型标识格式**：OpenClaw 统一使用 `provider/model-name` 格式标识模型。目前支持 12+ 个官方提供商：Ollama、SiliconFlow、DeepSeek、Moonshot AI、MiniMax、OpenRouter、GLM、Z.AI 等。
+> **模型标识格式**：OpenClaw 统一使用 `provider/model-name` 格式标识模型。目前支持 12+ 个官方提供商：Ollama、SiliconFlow、DeepSeek、Qwen（通义千问）、Moonshot AI、StepFun（阶跃星辰）、MiniMax、OpenRouter、GLM、Z.AI 等。
 >
 > **国内用户推荐**：[硅基流动（SiliconFlow）](https://cloud.siliconflow.cn)提供 OpenAI 兼容 API，新注册用户赠送 16 元算力券，支持支付宝/微信充值。详见第一章 4.2 节。通过硅基流动可直接访问 DeepSeek、Qwen、GLM 等多家模型，无需分别注册。
 
