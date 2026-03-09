@@ -102,6 +102,8 @@ gog auth add you@gmail.com --services gmail,calendar,drive,contacts,sheets,docs
 gog auth list
 ```
 
+![gog 授权成功状态](/gog-connection-status.png)
+
 > **提示**：为了方便使用，建议设置默认账号环境变量，这样每次调用 gog 时不用重复指定账号：
 > ```bash
 > export GOG_ACCOUNT=you@gmail.com
@@ -161,11 +163,13 @@ clawhub install notion
 
 需要创建 Notion Integration（集成接口，让 OpenClaw 获得访问你 Notion 数据的权限）并获取 API Token：
 
-<!-- TODO: 补充 Notion Integration 创建页面截图（New integration 按钮和 Token 显示） -->
+1. 访问 https://www.notion.so/profile/integrations
+2. 点击 **"+ New integration"**，填写集成名称、选择关联的 Workspace，其余必填项（Website、Privacy Policy URL 等）可以随意填写，然后点击 **Create**
+3. 创建成功后会弹出 "Integration successfully created" 提示，点击 **Configure integration settings** 进入设置页面
+4. 在设置页面找到 **OAuth Client Secret**（默认隐藏，点击旁边的显示按钮），点击复制——这就是你的 API Token
 
-1. 访问 https://www.notion.so/my-integrations
-2. 点击"New integration"创建新的集成，获取 Internal Token（一串以 `ntn_` 开头的密钥）
-3. 在 Notion 中打开需要访问的页面/数据库，点击右上角"..."→"Connections"→添加你刚创建的 Integration
+![Notion Integration 设置页面](/notion-integration.png)
+5. 在 Notion 中打开需要访问的页面/数据库，点击右上角 **"..."** → **"Connections"** → 添加你刚创建的 Integration
 
 ### 2.2 数据库操作
 
