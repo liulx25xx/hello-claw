@@ -452,11 +452,13 @@ openclaw status
 openclaw dashboard
 ```
 
-浏览器会自动打开 `http://localhost:18789`，你可以在这里和 OpenClaw 对话。
+![openclaw dashboard 终端输出](/openclaw-dashboard-terminal.png)
+
+浏览器会自动打开 `http://localhost:18789`，你可以在这里和 OpenClaw 对话：
+
+![Web 控制面板浏览器界面](/openclaw-dashboard-browser.png)
 
 > **什么是 localhost？** `localhost` 就是"本机"的意思，指你自己的电脑。`http://localhost:18789` 表示访问本机 18789 端口上运行的服务。这个网页只有你自己能打开，外人无法访问。
-
-![Web 控制面板首页](/openclaw-dashboard.png)
 
 ## 6. 第一次对话
 
