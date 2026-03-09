@@ -15,8 +15,21 @@ OpenClaw 需要 Node.js 22+ 运行环境。如果你已经装过，跳到[第 2 
 > **什么是终端（Terminal）？** 本教程需要在"终端"中输入命令。终端是一个文字界面，你输入命令，电脑执行：
 >
 > - **Windows**：按 `Win + X`，选择"终端"或"PowerShell"
+>   <details>
+>   <summary>查看 Windows 终端截图</summary>
+>
+>   ![Windows PowerShell 终端](/windows-powershell.png)
+>
+>   </details>
+>
 > - **macOS**：按 `Cmd + 空格`，搜索"Terminal"
 > - **Linux**：按 `Ctrl + Alt + T`
+>   <details>
+>   <summary>查看 Linux 终端截图</summary>
+>
+>   ![Linux 终端](/linux-terminal.png)
+>
+>   </details>
 
 ### 1.1 安装 Node.js
 
@@ -139,9 +152,66 @@ openclaw onboard --install-daemon
 
 **安全确认** → 选 **Yes**
 **配置模式** → 选 **QuickStart**
-**模型提供商** → 选 **Custom Provider**（硅基流动等国内提供商选这个）
+**模型提供商** → 选 **Custom Provider**
 
-然后输入以下信息（以硅基流动为例）：
+然后输入以下信息（以 OpenRouter 免费模型为例）：
+
+```
+◇  API Base URL
+│  https://openrouter.ai/api/v1
+
+◇  API Key
+│  sk-or-v1-你的密钥
+
+◇  Endpoint compatibility
+│  OpenAI-compatible
+
+◇  Model ID
+│  stepfun/step-3.5-flash:free
+```
+
+**推荐 OpenRouter**——注册即可使用免费模型（如 Step 3.5 Flash），无需充值，零成本完成全部教程练习。
+
+向导后续会询问渠道、技能等配置，**建议都先跳过**——QQ 机器人我们手动配置更快。
+
+> **还没有 API Key？** 展开下方指南获取。
+
+<details>
+<summary>获取 API Key：以 OpenRouter 为例（免费）</summary>
+
+**第一步：注册账号**
+
+1. 访问 [OpenRouter 官网](https://openrouter.ai)
+2. 点击右上角"Sign In"，支持 Google / GitHub 账号登录
+3. 注册成功后即可使用带 `:free` 标识的免费模型，无需充值
+
+**第二步：创建 API 密钥**
+
+1. 登录后访问 [API Keys 页面](https://openrouter.ai/settings/keys)
+2. 点击"Create Key"
+3. 复制生成的密钥（以 `sk-or-v1-` 开头）
+
+> **重要**：API 密钥只会显示一次，请立即复制保存。丢失需重新创建。
+
+**关于免费模型**：OpenRouter 上带 `:free` 后缀的模型完全免费，如 `stepfun/step-3.5-flash:free`。免费模型有速率限制，日常学习足够使用。如果需要更高速率或更强模型，可以充值使用付费模型。
+
+</details>
+
+<details>
+<summary>备选方案：使用硅基流动（SiliconFlow）</summary>
+
+如果你更倾向使用国内提供商，推荐硅基流动——新注册送 **16 元免费算力券**，支持支付宝/微信充值。
+
+**注册与获取 API Key**：
+
+1. 访问 [硅基流动官网](https://cloud.siliconflow.cn)，使用手机号注册
+2. 登录后进入 [控制台](https://cloud.siliconflow.cn/account/ak)，创建 API 密钥（以 `sk-` 开头）
+
+![硅基流动注册页面](/siliconflow-register.png)
+
+![API 密钥创建页面](/siliconflow-api-key.png)
+
+**向导中填写**：
 
 ```
 ◇  API Base URL
@@ -150,49 +220,14 @@ openclaw onboard --install-daemon
 ◇  API Key
 │  sk-你的密钥
 
-◇  Endpoint compatibility
-│  OpenAI-compatible
-
 ◇  Model ID
 │  deepseek-ai/DeepSeek-V3
 ```
 
-**国内用户推荐硅基流动（SiliconFlow）**——新注册送 **16 元免费算力券**，足够完成全部教程练习。
-
-向导后续会询问渠道、技能等配置，**建议都先跳过**——QQ 机器人我们手动配置更快。
-
-> **还没有 API Key？** 展开下方指南获取。
-
-<details>
-<summary>获取 API Key：以硅基流动为例</summary>
-
-**第一步：注册账号**
-
-1. 访问 [硅基流动官网](https://cloud.siliconflow.cn)
-2. 点击右上角"注册"，使用手机号注册（也支持微信扫码登录）
-3. 注册成功后自动获得 **16 元免费算力券**
-
-![硅基流动注册页面](/siliconflow-register.png)
-
-**第二步：创建 API 密钥**
-
-1. 登录后进入 [控制台](https://cloud.siliconflow.cn/account/ak)
-2. 左侧菜单选择"API 密钥"
-3. 点击"创建新 API 密钥"
-4. 复制生成的密钥（以 `sk-` 开头）
-
-![API 密钥创建页面](/siliconflow-api-key.png)
-
-> **重要**：API 密钥只会显示一次，请立即复制保存。丢失需重新创建。
-
-**第三步：充值（可选）**
-
-免费额度用完后，在"费用中心"充值，支持支付宝和微信支付。
-
 > **费用参考**：DeepSeek V3 模型，16 元约可进行 800-1500 次对话。
 
 <details>
-<summary>其他提供商的 API Key 获取方式</summary>
+<summary>更多提供商的 API Key 获取方式</summary>
 
 - **深度求索（DeepSeek）**：访问 https://platform.deepseek.com ，支持支付宝充值
 - **通义千问（Qwen）**：访问 https://dashscope.console.aliyun.com ，阿里云旗下
@@ -203,7 +238,6 @@ openclaw onboard --install-daemon
 - **稀宇科技（MiniMax）**：访问 https://platform.minimaxi.com
 - **智谱（GLM）**：访问 https://open.bigmodel.cn
 - **文心一言（ERNIE）**：访问 https://console.bce.baidu.com/qianfan
-- **OpenRouter**：访问 https://openrouter.ai ，一个 Key 访问多家模型
 - **OpenAI（GPT）**：访问 https://platform.openai.com ，需国际信用卡
 - **Anthropic（Claude）**：访问 https://console.anthropic.com ，需国际信用卡
 - **Google（Gemini）**：访问 https://aistudio.google.com ，有免费额度
@@ -221,24 +255,24 @@ openclaw onboard --install-daemon
 ```json
 {
   "env": {
-    "SILICONFLOW_API_KEY": "sk-你的密钥"
+    "OPENROUTER_API_KEY": "sk-or-v1-你的密钥"
   },
   "models": {
     "mode": "merge",
     "providers": {
-      "siliconflow": {
-        "baseUrl": "https://api.siliconflow.cn/v1",
-        "apiKey": "${SILICONFLOW_API_KEY}",
+      "openrouter": {
+        "baseUrl": "https://openrouter.ai/api/v1",
+        "apiKey": "${OPENROUTER_API_KEY}",
         "api": "openai-completions",
         "models": [
-          { "id": "deepseek-ai/DeepSeek-V3", "name": "DeepSeek V3" }
+          { "id": "stepfun/step-3.5-flash:free", "name": "Step 3.5 Flash (Free)" }
         ]
       }
     }
   },
   "agents": {
     "defaults": {
-      "model": { "primary": "siliconflow/deepseek-ai/DeepSeek-V3" }
+      "model": { "primary": "openrouter/stepfun/step-3.5-flash:free" }
     }
   }
 }

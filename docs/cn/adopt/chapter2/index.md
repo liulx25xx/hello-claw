@@ -50,6 +50,39 @@ QuickStart 模式下，OpenClaw 会展示默认配置摘要：
 
 > **什么是 Tools Profile？** `full` 表示 OpenClaw 可以执行命令、读写文件等完整操作。如果设为 `messaging`，它只能聊天不能干活。建议保持 `full`。
 
+::: warning 3.7 之前版本的已知问题
+OpenClaw 3.7 之前的版本存在一个 bug：即使向导中显示 `Tools profile: full`，实际默认值可能是 `messaging`，导致 OpenClaw 只会聊天、不会执行任何操作。如果你发现 OpenClaw 只给建议而不干活，大概率是这个问题。
+
+**修复方法**：
+
+```bash
+# 命令行修复（推荐）
+openclaw config set tools.profile full
+openclaw gateway restart
+```
+
+如果你使用 Trae CN 等 IDE，也可以直接编辑 `~/.openclaw/openclaw.json`，在顶层添加：
+
+```json
+{
+  "tools": {
+    "profile": "full"
+  }
+}
+```
+
+修改后运行 `openclaw gateway restart` 生效。
+:::
+
+::: danger full 模式安全提示
+`full` 模式意味着 OpenClaw 可以在你的电脑上执行任意命令、读写任意文件。这正是它强大的原因，但也意味着：
+- **不要在生产服务器上使用 `full` 模式**，除非你清楚自己在做什么
+- **不要把 OpenClaw 暴露到公网**，确保只有你自己能访问
+- 如果只需要聊天功能（如给家人使用），可以设为 `messaging` 模式来限制权限
+
+个人电脑上使用 `full` 模式是安全的，OpenClaw 执行每个操作前都会请求你确认。
+:::
+
 ### 1.4 配置 AI 模型
 
 这是向导的核心步骤。OpenClaw 本身不包含 AI 大脑，需要连接一个"模型提供商"。
@@ -59,7 +92,11 @@ QuickStart 模式下，OpenClaw 会展示默认配置摘要：
 │  Custom Provider
 ```
 
-选择 **Custom Provider** 可以接入硅基流动等国内提供商。然后依次输入：
+选择 **Custom Provider** 可以接入任何兼容 OpenAI 的提供商。
+
+> **提示**：如果你在第一章中已经配置了 OpenRouter 免费模型，这里会显示你之前的配置，无需重复操作。下面以硅基流动为例展示如何切换到国内付费提供商。
+
+以硅基流动为例，依次输入：
 
 ```
 ◇  API Base URL
@@ -75,7 +112,7 @@ QuickStart 模式下，OpenClaw 会展示默认配置摘要：
 │  deepseek-ai/DeepSeek-V3
 ```
 
-> **国内用户推荐硅基流动（SiliconFlow）**——新注册送 **16 元免费算力券**，足够完成全部教程练习。如何注册和获取 API Key，详见[第一章第 2 节](/cn/adopt/chapter1/#_2-配置-ai-模型)的折叠指南。
+> **国内付费场景推荐硅基流动（SiliconFlow）**——新注册送 **16 元免费算力券**，支持更多模型选择。如何注册和获取 API Key，详见[第一章第 2 节](/cn/adopt/chapter1/#_2-配置-ai-模型)的折叠指南。如果你用的是第一章推荐的 OpenRouter 免费模型，继续使用即可。
 
 <details>
 <summary>其他模型提供商配置参考</summary>
