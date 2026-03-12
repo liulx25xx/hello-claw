@@ -1,531 +1,559 @@
-# 第六章 技能系统入门
+# 第六章 Tools 配置
 
-> **前提**：本章假设你已完成第二章的安装配置。技能系统是 OpenClaw 的核心扩展机制，所有用户都建议了解。
+> 本章介绍 OpenClaw 的工具系统（Tools）——让龙虾从"只会聊天"变成"能干实事"的关键。完成后你将了解如何管理工具权限、使用联网搜索、浏览器自动化和定时任务等核心能力。
 
-OpenClaw 的技能系统就像手机的 App Store，让你可以为龙虾安装各种能力扩展。想让它查天气？安装天气技能。想让它管理 Gmail？安装邮件技能。截至 2026 年 3 月，社区维护的 ClawHub 注册表已有超过 **16,000** 个技能，覆盖生产力、开发、运维、内容创作等多个领域。
+> **AutoClaw 用户提示**：[AutoClaw](/cn/adopt/chapter1/) 默认开启 `full` 工具配置档，无需手动配置。本章帮助你理解工具系统的工作方式，以及如何按需调整。
 
-## 1. 什么是技能
+## 0. 什么是 Tools？
 
-技能（Skill）本质上是一组提示词指令的集合，以 `SKILL.md` 文件为核心。技能从三个位置按优先级加载：
+OpenClaw 的 AI 能力来自模型提供商（第二章配置的"大脑"），而**工具（Tools）就是龙虾的"双手"**——没有工具，它只能跟你聊天；有了工具，它能搜索网页、操作浏览器、读写文件、执行命令、定时跑任务。
 
-1. **工作区技能**（workspace）：项目目录下的技能，优先级最高
-2. **托管技能**（managed）：`~/.openclaw/skills/` 目录下通过 `clawhub` 安装的技能
-3. **内置技能**（bundled）：OpenClaw 自带的基础技能（web-search、web-fetch、browser、filesystem、shell）
+先厘清两个容易混淆的概念：
 
-> **路径说明**：`~/` 是 Linux/macOS 中"用户主目录"的简写。在 Windows 上对应 `C:\Users\你的用户名\`。例如 `~/.openclaw/` 在 Windows 上就是 `C:\Users\你的用户名\.openclaw\`。
+|  | Tools（工具） | Skills（技能） |
+|---|---|---|
+| **是什么** | OpenClaw 内置的底层能力 | 社区或用户编写的高层指令 |
+| **举例** | 执行命令、读写文件、搜索网页 | "每天早上发晨间简报"、"总结网页" |
+| **谁提供** | OpenClaw 核心代码 | ClawHub 技能市场 / 用户自己编写 |
+| **如何管理** | `openclaw.json` 中的 `tools` 配置 | `clawhub` CLI 安装/卸载 |
 
-每个技能包含两个核心部分：
+简单来说：**Tools 是手脚，Skills 是招式**。技能通过调用工具来完成任务。
 
-**元数据（YAML frontmatter）**：文件顶部用 `---` 包围的一段结构化信息，定义技能名称、描述、版本号等。你可以把它理解为技能的"身份证"，OpenClaw 通过它识别技能的基本信息。
+## 1. 工具配置档（Tool Profiles）
 
-**提示词指令（Markdown 正文）**：元数据下方的文本内容，教 OpenClaw 如何使用工具完成任务。比如"查询天气时优先使用用户所在城市"。Markdown 是一种简单的文本排版格式，类似于写笔记时用 `#` 表示标题、`-` 表示列表。
+Tool Profile 控制龙虾"能做什么"。OpenClaw 提供 4 个档位，从最开放到最受限：
 
-技能在会话启动时会被"快照"固定，确保本次对话中技能行为不变。技能配置统一存放在工作区级的 `openclaw.json`（JSON 格式）中，而非技能目录内部。
+| 配置档 | 能力范围 | 适用场景 |
+|--------|---------|---------|
+| `full` | 无限制，所有工具可用 | **推荐**——个人电脑上的全能助手 |
+| `coding` | 文件读写、命令执行、会话管理、记忆、图片分析 | 开发者专用，不含消息和浏览器 |
+| `messaging` | 消息收发、会话浏览、状态查看 | 纯聊天机器人，不能操作文件或执行命令 |
+| `minimal` | 仅状态查看 | 最小权限，几乎什么都不能做 |
+
+### 查看和修改当前配置档
+
+```bash
+# 查看当前配置
+openclaw config get tools.profile
+
+# 设置为 full（推荐）
+openclaw config set tools.profile full
+openclaw gateway restart
+```
+
+> **第二章遗留问题**：OpenClaw 3.7 之前的版本默认配置档可能是 `messaging`，导致龙虾"只会说不会做"。如果你发现龙虾只给建议却不执行操作，运行上面的命令切换到 `full`。
+
+::: danger full 模式安全提示
+`full` 模式意味着 OpenClaw 可以在你的电脑上执行任意命令、读写任意文件。个人电脑上使用是安全的（OpenClaw 执行每个操作前都会请求确认），但**不要在生产服务器上使用 `full` 模式**。如果只需要聊天功能（如给家人使用），设为 `messaging` 即可。
+:::
 
 <details>
-<summary>展开阅读：技能的形式化定义（学术视角，可跳过）</summary>
+<summary>为特定 Agent 单独设置配置档</summary>
 
-### 1.1 技能的形式化定义
-
-从计算理论的视角，OpenClaw 的技能系统可以用有限自动机（Finite Automaton）来形式化描述。一个技能的生命周期可表示为一个确定性有限自动机（DFA）五元组：
-
-$$M = (Q, \Sigma, \delta, q_0, F)$$
-
-其中：
-
-- **Q**（状态集）= {Unregistered, Installed, Disabled, Gated, Active, HotReloading, SoftDeleted}，共 7 个状态
-- **Σ**（输入字母表）= {install, uninstall, enable, disable, gate, grant, revoke, edit, hot-reload, soft-delete, restore}，共 11 个输入符号
-- **δ**（转移函数）：定义状态之间的转换规则（见下方状态图）
-- **q₀**（初始状态）= Unregistered
-- **F**（接受状态集）= {Active}
-
-状态转移关系如下：
-
-```
-Unregistered --install--> Installed --enable--> Active
-Active --disable--> Disabled --enable--> Active
-Active --gate--> Gated --grant--> Active
-Gated --revoke--> Disabled
-Active --edit--> HotReloading --hot-reload--> Active
-Active --soft-delete--> SoftDeleted --restore--> Installed
-Active --uninstall--> Unregistered
-Disabled --uninstall--> Unregistered
-SoftDeleted --uninstall--> Unregistered
-```
-
-其中 **Gated** 状态表示技能需要满足门控条件（如 API Key 配置）才能激活，**HotReloading** 状态用于开发时实时编辑技能而不中断会话。
-
-这个形式化模型的意义在于：
-
-1. **状态可预测**：技能在任意时刻只能处于一个确定状态，避免了"薛定谔的插件"问题
-2. **转换可验证**：每个操作（输入符号）只能在特定状态下执行，非法操作会被拒绝
-3. **生命周期可追踪**：通过记录状态转移序列，可以完整还原技能的使用历史
-4. **会话一致性**：技能在会话启动时快照固定，保证了行为的形式正则性（formal regularity）
-
-> 参考文献：*Agents as Automata*（arxiv.org/html/2510.23487v1）将 Agent 行为建模为有限自动机，*MetaAgent FSM*（arxiv.org/html/2507.22606v1）进一步将此框架扩展到多 Agent 编排。
-
-在实际使用中，`clawhub install` 会自动将技能从 Unregistered → Installed → Active（合并为一步），但底层仍然遵循这个状态机模型。
-
-</details>
-
-## 2. ClawHub：技能注册表
-
-OpenClaw 社区维护了一个名为 [ClawHub](https://clawhub.ai) 的技能注册表（类似 npm 之于 Node.js），源码托管在 `github.com/openclaw/clawhub`。你可以通过 `clawhub` 命令行工具，或通过 [ClawHub 原版](https://clawhub.ai) / [中文 ClawHub（腾讯 SkillHub）](https://skillhub.tencent.com/#categories) 浏览和管理技能。
-
-### 2.0 安装 clawhub CLI
-
-`clawhub` 是 ClawHub 技能注册表的命令行工具，需要单独安装：
-
-```bash
-npm i -g clawhub
-```
-
-安装后需要登录才能使用：
-
-1. 访问 [ClawHub 原版](https://clawhub.ai) 或 [中文 ClawHub（腾讯 SkillHub）](https://skillhub.tencent.com/#categories)，注册并登录
-2. 点击右上角**用户头像**，选择 **Settings**
-3. 在设置页面找到 **API tokens** 栏，点击 **Create token**
-4. 复制生成的 Token（只显示一次，请立即保存）
-
-![ClawHub API Token 创建页面](/clawhub-token.png)
-
-5. 在终端执行：
-
-```bash
-clawhub login --token <你的token>
-```
-
-验证登录成功：
-
-```bash
-clawhub whoami
-```
-
-
-### 2.1 浏览和搜索技能
-
-![clawhub search 终端输出](/clawhub-search.png)
-
-```bash
-# 列出所有可用技能
-clawhub list
-
-# 搜索特定类型的技能
-clawhub search agent
-clawhub search email
-clawhub search database
-```
-
-### 2.2 安装技能
-
-安装技能有两种方式：
-
-**方式一：通过 clawhub CLI（推荐）**
-
-```bash
-clawhub install weather
-```
-
-OpenClaw 会自动下载技能文件到 `~/.openclaw/skills/weather/`，解析配置需求，然后引导你完成配置。
-
-**方式二：通过聊天粘贴 GitHub URL**
-
-直接在对话中粘贴包含 `SKILL.md` 的 GitHub 仓库 URL，OpenClaw 会自动识别并安装。
-
-安装完成后可以立即测试：
-
-```
-帮我查一下明天的天气
-```
-
-### 2.3 管理已安装的技能
-
-```bash
-# 查看已安装的技能
-clawhub list
-
-# 更新单个技能
-clawhub update weather
-
-# 更新所有技能
-clawhub update --all
-
-# 卸载技能
-clawhub uninstall weather
-```
-
-<details>
-<summary>展开：技能文件结构详解（开发者参考）</summary>
-
-## 3. 技能文件结构
-
-### 3.1 SKILL.md 格式
-
-每个技能的核心是一个 `SKILL.md` 文件，使用 YAML frontmatter 定义元数据：
-
-```markdown
----
-name: weather
-description: 查询全球城市天气预报和空气质量
-version: 1.2.0
-requirements:
-  - curl
----
-
-# Weather Skill
-
-当用户询问天气相关问题时，使用以下工具获取数据。
-
-## 使用规则
-
-1. 优先使用用户所在城市
-2. 默认返回未来 3 天的天气
-3. 如果用户关心空气质量，一并返回 AQI 数据
-
-## 工具
-
-### get_weather
-- 参数：city (string), days (number, default: 3)
-- 用途：获取指定城市未来 N 天的天气预报
-```
-
-frontmatter 字段说明：
-
-| 字段 | 说明 | 必填 |
-|------|------|------|
-| name | 技能标识符（即技能的唯一英文短名，如 `weather`），用于安装和引用 | 是 |
-| description | 一句话功能描述 | 是 |
-| version | 语义化版本号 | 是 |
-| requirements | 系统依赖列表（如 python3, curl） | 否 |
-| user-invocable | 是否可由用户通过斜杠命令手动调用 | 否 |
-| disable-model-invocation | 禁止模型自动调用，只能用户手动触发 | 否 |
-| metadata | 单行 JSON，定义门控条件等高级配置 | 否 |
-
-### 3.2 目录结构
-
-一个完整的技能目录结构：
-
-```
-~/.openclaw/skills/weather/
-├── SKILL.md          # 核心：技能说明和指令（唯一必需文件）
-├── scripts/          # 可选：辅助脚本
-│   └── fetch.sh
-└── examples/         # 可选：使用示例
-    └── demo.md
-```
-
-> **注意**：技能目录内没有 `config.yaml` 或 `tools.yaml`。所有技能配置统一在工作区级的 `openclaw.json` 中管理，而非分散在各技能目录中。
-
-</details>
-
-## 4. 新手必装：十大推荐技能
-
-ClawHub 上有超过 16,000 个技能，质量参差不齐——有的非常实用，有的只是披着 Skill 壳的模型伪装，甚至有的会窃取你的 API Key。以下是从中精选的 10 个**安全且实用**的技能，建议按顺序安装：
-
-### 第一个必装：安全守卫
-
-```bash
-clawhub install skill-vetter
-```
-
-**Skill Vetter** 会自动检测你后续安装的每一个技能，扫描是否存在危险行为（如窃取 API Key、上传个人信息）。**请务必第一个安装它**。
-
-### 核心能力技能
-
-| 序号 | 技能 | 安装命令 | 一句话说明 |
-|------|------|---------|-----------|
-| 2 | **Tavily Web Search** | `clawhub install tavily-search` | 专为 Agent 设计的联网搜索，结果全、新、简洁 |
-| 3 | **Agent Browser** | `clawhub install agent-browser` | 让龙虾打开浏览器，抓取信息、填写表单、操作网页 |
-| 4 | **Summarize** | `clawhub install summarize` | 对网页、PDF、图像、音频、YouTube 等内容生成摘要 |
-| 5 | **Gog** | `clawhub install gog` | Google 全家桶：Gmail、Calendar、Drive、Docs 一键打包 |
-| 6 | **GitHub** | `clawhub install github` | PR 管理、Issue 追踪、代码搜索、仓库操作，开发者必备 |
-| 7 | **Obsidian** | `clawhub install obsidian` | 接入本地 Obsidian 笔记库，整理笔记、知识关联 |
-
-### 进阶能力技能
-
-| 序号 | 技能 | 安装命令 | 一句话说明 |
-|------|------|---------|-----------|
-| 8 | **Self-Improving Agent** | `clawhub install self-improving-agent` | 记录经验教训和纠正措施，让龙虾持续自我改进 |
-| 9 | **Proactive Agent** | `clawhub install proactive-agent` | 赋予龙虾主动性，记住历史行为并根据环境变化自动执行任务 |
-| 10 | **Capability Evolver** | `clawhub install capability-evolver` | 让龙虾自主进化——分析已有流程，在薄弱环节创造新 Skill 辅助迭代 |
-
-> **一键安装全部**：你也可以直接告诉龙虾"帮我安装 skill-vetter、tavily-search、agent-browser"，它会帮你逐个下载安装。
-
-### 更多精选技能
-
-ClawHub 上技能数量庞大，社区项目 [awesome-openclaw-skills](https://github.com/VoltAgent/awesome-openclaw-skills) 从中精选了 **5,000+** 个高质量技能，按场景分类，过滤了大量低质和危险技能。如果上面 10 个不够用，去那里逛逛。
-
----
-
-## 5. 技能分类速查
-
-以下按使用场景分类列出更多常用技能，方便按需选装：
-
-<!-- TODO: 补充每个技能的使用截图 -->
-
-### 5.1 生产力套件
-
-| 技能 | 安装命令 | 功能 |
-|------|---------|------|
-| Google Workspace (gog) | `clawhub install gog` | Gmail、Calendar、Drive、Docs、Sheets 统一访问 |
-| Notion | `clawhub install notion` | 数据库、页面同步，长期记忆存储 |
-| Todoist | `clawhub install todoist` | 任务管理、标签、优先级、周期规则 |
-| Slack | `clawhub install slack` | 消息发送、频道管理、文件上传 |
-| Obsidian | `clawhub install obsidian` | Markdown 笔记库管理，支持 wikilink |
-
-### 5.2 开发工具
-
-| 技能 | 安装命令 | 功能 |
-|------|---------|------|
-| GitHub | `clawhub install github` | 仓库、Issue、PR 管理，REST API + GraphQL |
-| Git Operations | `clawhub install git-ops` | 安全的 Git 命令执行 |
-| Code Reviewer | `clawhub install code-reviewer` | Diff 分析、代码审查、Commit 消息生成 |
-| SQL Toolkit | `clawhub install sql-toolkit` | PostgreSQL/MySQL/SQLite 只读查询 |
-| CI/CD Pipeline | `clawhub install cicd-pipeline` | GitHub/GitLab/Jenkins 流水线控制 |
-
-### 5.3 运维与基础设施
-
-| 技能 | 安装命令 | 功能 |
-|------|---------|------|
-| DevOps Toolkit | `clawhub install devops` | Docker 编排、进程管理、健康监控 |
-| AWS Infrastructure | `clawhub install aws-infra` | EC2、S3、Lambda 对话式管理 |
-| Azure DevOps | `clawhub install azure-devops` | 项目、仓库、看板、流水线管理 |
-
-### 5.4 内容与社交
-
-| 技能 | 安装命令 | 功能 |
-|------|---------|------|
-| LinkedIn | `clawhub install linkedin` | 帖子生成、轮播图、定时发布 |
-| X (Twitter) | `clawhub install x-api` | 推文、线程、媒体附件 |
-| Blogburst | `clawhub install blogburst` | 长文内容自动拆分为社交媒体帖子 |
-
-### 5.5 个人助理
-
-| 技能 | 安装命令 | 功能 |
-|------|---------|------|
-| Weather | `clawhub install weather` | 天气、交通、航班实时数据 |
-| Calendar Pro | `clawhub install caldav-calendar` | 多日历集成、冲突检测 |
-| AgentMail | `clawhub install agentmail` | IMAP/SMTP 邮件管理、线程摘要、自动回复 |
-| Home Assistant | `clawhub install home-assistant` | 智能家居设备控制 |
-
-### 5.6 特殊技能
-
-| 技能 | 安装命令 | 功能 |
-|------|---------|------|
-| Playwright | `clawhub install playwright` | 无头浏览器自动化、表单填写、数据提取 |
-| Hacker News | `clawhub install hackernews` | 技术新闻摘要和个性化推送 |
-| Self-Improving | `clawhub install self-improving` | 记录成功/失败执行，自我优化模式识别 |
-
-## 6. 配置技能
-
-安装后可以随时修改技能配置。技能配置统一存放在工作区级的 `openclaw.json` 中：
+如果你运行多个 Agent（如一个全能助手 + 一个客服机器人），可以为每个 Agent 设置不同的配置档：
 
 ```json
 {
-  "skills": {
-    "weather": {
-      "api_key": "your_api_key",
-      "default_city": "Beijing",
-      "units": "metric",
-      "language": "zh_CN"
+  "tools": { "profile": "full" },
+  "agents": {
+    "list": [
+      {
+        "id": "support",
+        "tools": { "profile": "messaging", "allow": ["slack"] }
+      }
+    ]
+  }
+}
+```
+
+上面的配置让默认 Agent 拥有全部工具，而 `support` Agent 只能收发消息和使用 Slack。
+
+</details>
+
+<details>
+<summary>在配置文件中手动设置</summary>
+
+编辑 `~/.openclaw/openclaw.json`（Windows：`C:\Users\你的用户名\.openclaw\openclaw.json`）：
+
+```json
+{
+  "tools": {
+    "profile": "full"
+  }
+}
+```
+
+修改后运行 `openclaw gateway restart` 生效。
+
+</details>
+
+## 2. 内置工具一览
+
+OpenClaw 内置了丰富的工具，按功能分为以下几类：
+
+| 分类 | 工具 | 说明 |
+|------|------|------|
+| **文件操作** | `read` `write` `edit` `apply_patch` | 读写文件，批量打补丁 |
+| **命令执行** | `exec` `process` | 运行 Shell 命令、管理后台进程 |
+| **网页** | `web_search` `web_fetch` | 搜索引擎查询、抓取网页内容 |
+| **浏览器** | `browser` | 完整的浏览器自动化（点击、输入、截图） |
+| **消息** | `message` | 跨渠道收发消息（飞书/QQ/Telegram 等） |
+| **定时任务** | `cron` | 创建和管理定时 / 周期性任务 |
+| **画布** | `canvas` | 驱动配套 App 的画布功能 |
+| **设备** | `nodes` | 发现配套设备、拍照、录屏、获取位置 |
+| **图片/PDF** | `image` `pdf` | 分析图片内容、解析 PDF 文档 |
+| **网关** | `gateway` | 重启网关、查看和修改配置 |
+| **会话** | `sessions_*` `agents_list` | 管理对话会话、生成子 Agent |
+
+> 你不需要逐个记住这些工具——龙虾会根据你的指令自动选择合适的工具。你只需确保对应的工具已启用（配置档为 `full` 时全部可用）。
+
+<details>
+<summary>工具组（快捷分组）速查表</summary>
+
+OpenClaw 提供预定义的工具组，方便在配置中批量引用：
+
+| 工具组 | 包含的工具 |
+|--------|-----------|
+| `group:fs` | read, write, edit, apply_patch |
+| `group:runtime` | exec, bash, process |
+| `group:web` | web_search, web_fetch |
+| `group:ui` | browser, canvas |
+| `group:sessions` | sessions_list / history / send / spawn, session_status |
+| `group:memory` | memory_search, memory_get |
+| `group:automation` | cron, gateway |
+| `group:messaging` | message |
+| `group:nodes` | nodes |
+| `group:openclaw` | 所有内置工具（不含插件） |
+
+在后续的权限管理中会用到这些组名。
+
+</details>
+
+## 3. 联网搜索
+
+联网搜索让龙虾可以查询实时信息，而不仅仅依赖训练数据中的旧知识。
+
+### 3.1 支持的搜索引擎
+
+| 搜索引擎 | 说明 |
+|---------|------|
+| **Brave** | 隐私友好，免费额度充足，推荐入门使用 |
+| **Perplexity** | AI 增强搜索，结果质量高 |
+| **Kimi** | 国内可用，中文搜索优化 |
+| **Gemini** | Google 搜索能力 |
+| **Grok** | xAI 提供的搜索 |
+
+### 3.2 配置搜索
+
+最简单的方式是通过配置向导：
+
+```bash
+openclaw configure --section web
+```
+
+向导会引导你选择搜索引擎并填写 API Key。
+
+<details>
+<summary>手动编辑配置文件</summary>
+
+编辑 `~/.openclaw/openclaw.json`：
+
+```json
+{
+  "tools": {
+    "web": {
+      "search": {
+        "enabled": true,
+        "provider": "brave",
+        "maxResults": 5
+      },
+      "fetch": {
+        "enabled": true,
+        "maxCharsCap": 50000
+      }
+    }
+  },
+  "env": {
+    "BRAVE_API_KEY": "你的 Brave API Key"
+  }
+}
+```
+
+修改后运行 `openclaw gateway restart` 生效。
+
+> 搜索结果默认缓存 15 分钟，避免重复请求浪费 API 额度。
+
+</details>
+
+### 3.3 使用示例
+
+配置完成后，直接在对话中提问即可——龙虾会自动判断是否需要联网：
+
+```
+今天有什么科技新闻？
+```
+
+```
+帮我搜索"OpenClaw 最新版本"的更新内容
+```
+
+龙虾会自动调用 `web_search` 查询，并将搜索结果整合到回答中。
+
+> **网页抓取**：除了搜索，`web_fetch` 工具可以从指定 URL 抓取网页内容并转为文字。对于 JavaScript 渲染的动态网页（如单页应用），建议使用下一节介绍的浏览器工具。
+
+## 4. 浏览器自动化
+
+浏览器工具让龙虾可以像人一样操作网页——打开页面、点击按钮、填写表单、截取屏幕。
+
+### 4.1 启用浏览器
+
+浏览器工具默认已启用（`browser.enabled: true`）。确认状态：
+
+```bash
+openclaw config get browser.enabled
+```
+
+如果返回 `false`，手动启用：
+
+```bash
+openclaw config set browser.enabled true
+openclaw gateway restart
+```
+
+> **前提**：系统需要安装 Chrome 或 Chromium 浏览器。大多数电脑已经预装了 Chrome。
+
+### 4.2 使用示例
+
+在对话中直接告诉龙虾你想做什么：
+
+```
+帮我打开百度搜索"今日天气"，截图给我看
+```
+
+```
+打开 https://example.com ，找到登录按钮并点击
+```
+
+龙虾会自动完成以下流程：
+
+1. **启动浏览器** → 打开一个受控的 Chrome 实例
+2. **打开网页** → 导航到目标 URL
+3. **获取页面快照** → 识别页面上所有可操作的元素
+4. **执行操作** → 点击、输入、选择等
+5. **截图确认** → 把结果截图发给你
+
+<details>
+<summary>浏览器支持的操作</summary>
+
+| 操作 | 说明 |
+|------|------|
+| `status` | 查看浏览器是否运行 |
+| `start` / `stop` | 启动 / 关闭浏览器 |
+| `open` | 打开指定 URL |
+| `tabs` / `focus` / `close` | 标签页管理 |
+| `snapshot` | 获取页面快照（识别可操作元素） |
+| `screenshot` | 截取当前页面图片 |
+| `act` | 交互操作：click / type / press / hover / drag / fill / resize / wait |
+| `navigate` | 前进 / 后退 / 刷新 |
+| `console` | 查看浏览器控制台日志 |
+| `pdf` | 将当前页面导出为 PDF |
+| `upload` | 上传文件 |
+
+> `snapshot` 有两种模式：`ai`（默认，使用 Playwright 分析页面结构）和 `aria`（返回无障碍树）。`act` 操作需要引用 `snapshot` 返回的元素编号。
+
+</details>
+
+<details>
+<summary>浏览器多实例（Profile）管理</summary>
+
+如果你需要同时登录多个账号（如个人 + 工作），可以创建多个浏览器实例：
+
+```json
+{
+  "browser": {
+    "enabled": true,
+    "defaultProfile": "chrome",
+    "profiles": {
+      "chrome": { "port": 18800 },
+      "work": { "port": 18801 }
     }
   }
 }
 ```
 
-也可以通过交互式命令配置：
+每个 Profile 有独立的 Cookie 和登录状态。在对话中指定使用哪个：
 
-```bash
-openclaw config
+```
+用 work 浏览器打开飞书文档
 ```
 
-对于需要 API Key 的技能，安装时会自动引导你输入。你也可以后续通过 `openclaw config` 或直接编辑 `openclaw.json` 修改。
-
-<details>
-<summary>展开：创建和发布自定义技能</summary>
-
-## 7. 创建自定义技能
-
-如果 ClawHub 上没有你需要的技能，可以自己创建。
-
-### 7.1 最小化技能
-
-创建一个查询 IP 地址的技能，只需要一个 `SKILL.md`：
-
-```markdown
----
-name: my-ip
-description: 查询当前公网 IP 地址和地理位置
-version: 1.0.0
----
-
-# IP 查询技能
-
-当用户询问 IP 地址或网络位置时，执行以下命令：
-
-curl -s https://ipinfo.io/json
-
-返回结果中包含 IP、城市、地区、国家、运营商等信息。
-```
-
-### 7.2 安装自定义技能
-
-```bash
-# 从本地目录安装
-clawhub install ./my-ip
-
-# 或直接复制到技能目录
-cp -r my-ip ~/.openclaw/skills/
-```
-
-### 7.3 发布到 ClawHub
-
-如果你的技能对他人有用，可以提交到 ClawHub：
-
-```bash
-# 1. Fork github.com/openclaw/clawhub
-# 2. 添加你的技能目录
-# 3. 提交 Pull Request
-```
-
-### 7.4 使用 Skill Seekers 自动生成技能
-
-如果你想为特定技术栈或文档快速生成技能，可以使用 **Skill Seekers** 工具。它能自动将文档网站、GitHub 仓库、PDF 和视频转换为 Claude/Gemini/OpenAI Skills。
-
-**安装**：
-```bash
-pip install skill-seekers
-```
-
-**从文档网站生成技能**：
-```bash
-# 为 React 文档生成技能
-skill-seekers create https://docs.react.dev/
-
-# 从 GitHub 仓库生成
-skill-seekers create facebook/react
-
-# 从本地项目生成
-skill-seekers create ./my-project
-```
-
-**导出为 OpenClaw 可用格式**：
-```bash
-# 打包为 Claude Skill（可导入 OpenClaw）
-skill-seekers package output/react --target claude
-```
-
-**Skill Seekers 的优势**：
-- ⚡ 99%  faster — 数天的手动准备 → 15-45 分钟
-- 🎯 高质量 SKILL.md — 500+ 行的完整技能文件
-- 📊 RAG-ready 分块 — 智能分块保留代码块和上下文
-- 🌐 多源支持 — 文档 + GitHub + PDF + 视频
-
-> 📖 更多信息：[Skill Seekers GitHub](https://github.com/yusufkaraaslan/Skill_Seekers)
+Profile 命名规则：小写字母 + 数字 + 短横线，最长 64 字符。端口范围 18800–18899（最多约 100 个实例）。
 
 </details>
 
-## 8. 飞书插件：技能实战案例
+## 5. 定时任务（Cron）
 
-飞书官方插件是一个典型的复合技能，展示了技能如何深度集成外部服务。安装飞书插件后（安装步骤参见第三章 2.4 节），OpenClaw 不仅能通过飞书收发消息，还能直接操作飞书的办公数据：
+Cron 让龙虾按计划自动执行任务——比如每天早上发天气预报、每周生成工作汇报、每隔一段时间检查邮件。
 
-| 能力 | 说明 |
+### 5.1 创建定时任务
+
+```bash
+# 每天早上 8 点发天气预报
+openclaw cron add --name "天气预报" --cron "0 8 * * *" \
+  --message "查询今天的天气，发送给我" \
+  --channel "feishu:chat:你的ChatID"
+
+# 每 30 分钟检查一次
+openclaw cron add --name "定期检查" --every 30m \
+  --message "检查有没有需要我处理的事情"
+
+# 20 分钟后提醒我（一次性）
+openclaw cron add --name "提醒" --at 20m \
+  --message "提醒：该休息一下了！"
+```
+
+三种调度方式：
+- `--cron "表达式"`：标准 Cron 表达式，精确控制执行时间
+- `--every 间隔`：固定周期重复（如 `10m`、`1h`、`6h`）
+- `--at 延时`：从现在起延迟一次性执行
+
+<details>
+<summary>Cron 表达式速查</summary>
+
+Cron 表达式格式：`分 时 日 月 周`
+
+| 表达式 | 含义 |
+|--------|------|
+| `0 8 * * *` | 每天早上 8:00 |
+| `0 9 * * 1-5` | 工作日（周一到周五）上午 9:00 |
+| `*/30 * * * *` | 每 30 分钟 |
+| `0 20 * * 5` | 每周五晚上 8:00 |
+| `0 0 1 * *` | 每月 1 日零点 |
+
+如果不熟悉 Cron 表达式，用 `--every`（周期间隔）或 `--at`（延时一次）更直观。
+
+</details>
+
+### 5.2 管理定时任务
+
+```bash
+# 查看所有任务
+openclaw cron list
+
+# 手动触发一次
+openclaw cron run 天气预报
+
+# 查看执行历史
+openclaw cron runs --id <taskID>
+
+# 暂停 / 恢复任务
+openclaw cron disable 天气预报
+openclaw cron enable 天气预报
+
+# 编辑任务
+openclaw cron edit <jobId>
+
+# 删除任务
+openclaw cron rm <jobId>
+```
+
+> **注意**：Cron 任务依赖 Gateway 持续运行。如果 Gateway 关闭（如电脑关机），任务不会执行。重新启动后任务会自动恢复。
+
+> **`--channel` 参数格式**因平台而异，例如：`feishu:chat:<ChatID>`、`telegram:chat:<ChatID>`、`qqbot:group:<groupid>`。完整格式见[附录 F 命令速查表](/cn/appendix/appendix-f)。
+
+## 6. 命令执行（Exec）
+
+`exec` 工具让龙虾直接在你的电脑上运行 Shell 命令。这是它"干活"最核心的能力——安装软件、处理文件、运行脚本等都靠它。
+
+### 使用示例
+
+```
+帮我创建一个文件叫 hello.txt，写上今天的日期和"Hello from OpenClaw!"
+```
+
+```
+用 Python 写一个猜数字小游戏，保存为 game.py 并运行它
+```
+
+龙虾会自动使用 `exec` 执行命令，每次执行前会请求你确认。
+
+<details>
+<summary>exec 工具的核心参数</summary>
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `command` | 要执行的命令（必填） | — |
+| `timeout` | 超时秒数，超时后终止 | 1800（30 分钟） |
+| `background` | 立即后台运行 | false |
+| `yieldMs` | 超过该毫秒数后自动切后台 | 10000（10 秒） |
+| `pty` | 是否需要真实终端 | false |
+
+后台运行的命令可以通过 `process` 工具管理：
+
+| 操作 | 说明 |
 |------|------|
-| 消息 | 群聊/单聊历史搜索、消息发送、文件下载 |
-| 文档 | 创建和编辑飞书云文档 |
-| 多维表格 | 表格管理与数据操作（类似 Airtable） |
-| 日程 | 日历查看、会议创建、忙闲查询 |
-| 任务 | 任务和清单的创建与管理 |
-
-使用示例：
-
-```
-帮我在飞书上创建一个项目周报文档，包含本周完成的任务和下周计划
-```
-
-```
-查看我今天的飞书日程，如果有冲突的会议帮我标记出来
-```
-
-```
-在项目管理多维表格中添加一条新任务：完成 API 文档编写，截止日期下周五
-```
-
-这种深度集成体现了技能系统的核心价值：通过标准化的 SKILL.md 接口，将复杂的外部服务能力无缝注入 OpenClaw 的执行循环中。
-
-<details>
-<summary>展开：性能考量与安全提示</summary>
-
-## 9. 技能系统的性能考量
-
-技能并非越多越好。每个活跃技能都会增加上下文加载量，影响响应速度。
-
-### 技能加载机制
-
-OpenClaw 采用**三级加载优先级**：
-
-| 优先级 | 来源 | 路径 | 说明 |
-|--------|------|------|------|
-| 1（最高） | 工作区级 | `~/.openclaw/workspace/skills/` | 你手动放置或针对当前工作区安装的技能 |
-| 2 | 共享级 | `~/.openclaw/skills/` | `clawhub install` 安装的全局技能 |
-| 3（最低） | 内置级 | OpenClaw 安装目录 | 随 OpenClaw 一起发布的默认技能 |
-
-同名技能按优先级覆盖——如果工作区有一个 `web-search`，它会屏蔽全局和内置的同名技能。
-
-每次对话开始时，OpenClaw 会生成一份**技能快照**（snapshot），将所有活跃技能的 SKILL.md 内容注入上下文。技能采用**懒加载**策略：只有在对话中被触发（匹配到关键词或被 AI 主动选用）时，才会执行技能脚本。
-
-### 性能影响与建议
-
-| 技能数量 | 上下文占用 | 响应速度影响 | 建议 |
-|---------|-----------|-------------|------|
-| 1-5 个 | 低 | 几乎无感 | 新手推荐 |
-| 5-10 个 | 中等 | 略有延迟 | 日常使用合理上限 |
-| 10-20 个 | 较高 | 明显变慢 | 建议禁用不常用的 |
-| 20+ 个 | 很高 | 严重影响 | 不推荐 |
-
-**按需安装**：只安装真正需要的技能。5-10 个常用技能是一个合理的数量。
-
-**定期清理**：用 `clawhub list` 查看所有已安装技能，用 `clawhub uninstall <技能名>` 卸载不再使用的技能，保持系统精简。
-
-```bash
-# 查看当前安装了哪些技能
-clawhub list
-
-# 只看活跃的技能
-clawhub list --active
-
-# 卸载不需要的技能
-clawhub uninstall old-unused-skill
-```
-
-**保护敏感信息**：技能配置中的 API 密钥存储在本地，但仍要注意不要将 `~/.openclaw/skills/` 目录上传到公开仓库。
-
-**测试后再用**：新安装的技能先在测试环境试用，确认没问题后再用于生产任务。对于未经审计的第三方技能，建议在 Docker 沙箱中运行。
-
-> **安全警告**：2026 年 2 月的安全审计（ClawHavoc 事件）发现 ClawHub 上约 12% 的技能存在恶意行为或安全漏洞。OpenClaw 团队已进行清理，但安装第三方技能时仍需保持警惕。建议优先使用高星标技能，并检查 SKILL.md 中的指令内容。
-
-**安装安全守卫**：强烈建议安装 `skill-vetter`（详见本章第 4 节），它会自动扫描你后续安装的每一个技能，检测是否存在窃取 API Key、上传个人信息等危险行为：
-
-```bash
-clawhub install skill-vetter
-```
+| `list` | 列出所有后台进程 |
+| `poll` | 获取新输出和退出状态 |
+| `log` | 查看输出日志 |
+| `write` | 向进程写入输入 |
+| `kill` | 终止进程 |
+| `clear` / `remove` | 清理已完成的进程 |
 
 </details>
 
 <details>
-<summary>展开阅读：技能与 MCP 的关系</summary>
+<summary>exec 安全策略</summary>
 
-## 10. 技能与 MCP 的关系
+exec 工具有三种安全级别：
 
-OpenClaw 的技能系统与 MCP（Model Context Protocol）是两个不同层面的概念：
+| 级别 | 说明 |
+|------|------|
+| `deny` | 完全禁止执行命令 |
+| `allowlist` | 仅允许白名单中的命令 |
+| `full` | 允许执行任何命令（需用户确认） |
 
-- **技能（Skills）**：提示词层面的指令包，定义 Agent 的行为规则和工具使用方式
-- **MCP**：工具层面的进程协议，提供外部工具的标准化接口
-
-截至目前，OpenClaw 并未原生支持 MCP（相关 Issue #4834 已关闭，状态为"not planned"）。但社区已有大量 MCP 包装器（wrapper），可将 MCP 服务器的能力通过技能接口暴露给 OpenClaw 使用。
+如果你需要限制龙虾可以执行的命令范围，可以在 `openclaw.json` 中配置 `tools.exec.security` 和对应的白名单。
 
 </details>
+
+## 7. 工具权限管理
+
+有时你需要限制龙虾的能力范围——比如不让它操作浏览器，或者只允许文件操作。
+
+### 7.1 允许 / 禁止特定工具
+
+通过 `tools.allow` 和 `tools.deny` 精确控制。编辑 `~/.openclaw/openclaw.json`：
+
+**禁止浏览器**：
+
+```json
+{
+  "tools": {
+    "deny": ["browser"]
+  }
+}
+```
+
+**只允许文件操作和搜索**：
+
+```json
+{
+  "tools": {
+    "allow": ["group:fs", "group:web"]
+  }
+}
+```
+
+> **规则**：`deny` 优先于 `allow`。匹配不区分大小写，支持 `*` 通配符（`"*"` 表示所有工具）。
+
+修改后运行 `openclaw gateway restart` 生效。
+
+<details>
+<summary>按模型提供商限制工具</summary>
+
+如果你使用多个模型提供商，可以为不同提供商设置不同的工具权限。通过 `tools.byProvider` 配置：
+
+```json
+{
+  "tools": {
+    "profile": "coding",
+    "byProvider": {
+      "google-antigravity": { "profile": "minimal" }
+    }
+  }
+}
+```
+
+`byProvider` 只能**收窄**权限，不能超出全局配置档的范围。支持 `provider`（如 `siliconflow`）或 `provider/model`（如 `openai/gpt-5.2`）两种粒度。
+
+</details>
+
+<details>
+<summary>工具循环检测（Loop Detection）</summary>
+
+如果龙虾陷入反复调用同一工具的死循环，可以启用循环检测：
+
+```json
+{
+  "tools": {
+    "loopDetection": {
+      "enabled": true,
+      "warningThreshold": 10,
+      "criticalThreshold": 20,
+      "globalCircuitBreakerThreshold": 30
+    }
+  }
+}
+```
+
+检测器会识别三种循环模式：
+
+- **重复调用**：相同工具 + 相同参数反复调用
+- **轮询无进展**：反复检查状态但结果不变
+- **乒乓模式**：两个工具交替调用却无进展
+
+默认关闭。如果你发现龙虾偶尔会"卡住"反复做同一件事，可以启用此功能。
+
+</details>
+
+## 8. 插件工具
+
+除了内置工具，OpenClaw 还支持通过插件扩展更多能力：
+
+| 插件 | 说明 |
+|------|------|
+| **Lobster** | 工作流运行时，支持多步骤任务和可恢复的审批流程 |
+| **LLM Task** | JSON 格式的 LLM 调用，用于结构化输出（可选 Schema 校验） |
+| **Diffs** | 文件差异查看器，支持 PNG / PDF 渲染 |
+| **Voice Call** | 语音通话插件 |
+| **Zalo Personal** | Zalo 个人账号插件 |
+
+插件可以注册自己的工具和 CLI 命令。安装和配置详见[附录 G 配置文件详解](/cn/appendix/appendix-g)。
+
+<details>
+<summary>工具如何呈现给 AI 模型</summary>
+
+OpenClaw 通过两个通道让模型"看到"工具：
+
+1. **系统提示词**：人类可读的工具列表 + 使用指南
+2. **工具 Schema**：结构化的函数定义，发送到模型 API
+
+模型同时看到"有哪些工具"和"如何调用它们"。如果一个工具既不在系统提示词中也不在 Schema 中，模型就无法调用它。这就是 `tools.allow` / `tools.deny` 的工作原理——被禁止的工具不会被发送给模型。
+
+</details>
+
+## 9. 常见问题
+
+**Q: 龙虾只会聊天，不执行任何操作？**
+
+A: 工具配置档可能是 `messaging` 或 `minimal`。修复：
+
+```bash
+openclaw config set tools.profile full
+openclaw gateway restart
+```
+
+**Q: 联网搜索不可用？**
+
+A: 需要配置搜索引擎 API Key。运行 `openclaw configure --section web` 进行设置。没有 API Key 之前，搜索功能无法使用。
+
+**Q: 浏览器工具报错？**
+
+A: 先确认浏览器已启用（`openclaw config get browser.enabled`），再确保系统安装了 Chrome 或 Chromium。Linux 服务器（无图形界面）需要安装 Chromium headless 模式。WSL2 用户可能需要额外配置，详见[附录 G 配置文件详解](/cn/appendix/appendix-g)。
+
+**Q: 定时任务没有执行？**
+
+A: 检查 Gateway 是否在运行（`openclaw status`）。Cron 任务依赖 Gateway 持续运行——电脑关机或 Gateway 停止期间的任务不会补执行。
+
+**Q: 如何知道龙虾调用了哪些工具？**
+
+A: 在 Web 控制面板（`openclaw dashboard`）中查看对话详情可以看到每次工具调用。也可以查看日志：
+
+```bash
+openclaw logs --limit 50
+```
 
 ---
 
-**下一步**：[第七章 多平台进阶与外部服务](/cn/adopt/chapter7/)
+**下一步**：
+- 想了解更多配置细节？→ [附录 G 配置文件详解](/cn/appendix/appendix-g)

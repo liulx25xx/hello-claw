@@ -58,46 +58,26 @@ export default defineConfig({
               items: [
                 { text: '写在开头', link: '/cn/adopt/intro' },
                 {
-                  text: '🔵 光速上手',
+                  text: '🔵 安装',
                   collapsed: false,
                   items: [
                     { text: '第1章 AutoClaw 一键安装', link: '/cn/adopt/chapter1' },
+                    { text: '第2章 OpenClaw 手动安装', link: '/cn/adopt/chapter2' },
                   ]
                 },
                 {
-                  text: '🟢 手动安装',
+                  text: '🟢 场景配置',
                   collapsed: false,
                   items: [
-                    { text: '第2章 手动安装 OpenClaw', link: '/cn/adopt/chapter2' },
-                    { text: '第3章 接入聊天平台', link: '/cn/adopt/chapter3' },
-                  ]
-                },
-                {
-                  text: '🟡 日常使用',
-                  collapsed: false,
-                  items: [
-                    { text: '第4章 命令行与基础配置', link: '/cn/adopt/chapter4' },
-                    { text: '第5章 定时任务', link: '/cn/adopt/chapter5' },
-                    { text: '第6章 技能系统入门', link: '/cn/adopt/chapter6' },
-                    { text: '🦞 龙虾点评', link: '/cn/adopt/lobster-review' },
-                  ]
-                },
-                {
-                  text: '🟠 高级配置',
-                  collapsed: true,
-                  items: [
-                    { text: '第7章 多平台与外部服务', link: '/cn/adopt/chapter7' },
-                    { text: '第8章 多模型与成本优化', link: '/cn/adopt/chapter8' },
-                    { text: '第9章 个性化定制', link: '/cn/adopt/chapter9' },
-                  ]
-                },
-                {
-                  text: '🔴 高级场景',
-                  collapsed: true,
-                  items: [
-                    { text: '第10章 生产环境部署', link: '/cn/adopt/chapter10' },
-                    { text: '第11章 开发者效率提升', link: '/cn/adopt/chapter11' },
-                    { text: '第12章 故障排查与维护', link: '/cn/adopt/chapter12' },
+                    { text: '第3章 Channels 配置', link: '/cn/adopt/chapter3' },
+                    { text: '第4章 Models 配置', link: '/cn/adopt/chapter4' },
+                    { text: '第5章 Agents 配置', link: '/cn/adopt/chapter5' },
+                    { text: '第6章 Tools 配置', link: '/cn/adopt/chapter6' },
+                    { text: '第7章 Gateway 配置', link: '/cn/adopt/chapter7' },
+                    { text: '第8章 远程访问与网络', link: '/cn/adopt/chapter8' },
+                    { text: '第9章 安全防护与威胁模型', link: '/cn/adopt/chapter9' },
+                    { text: '第10章 Web 界面与客户端', link: '/cn/adopt/chapter10' },
+                    { text: '第11章 Onboarding 配置向导', link: '/cn/adopt/chapter11' },
                   ]
                 },
               ]
@@ -105,13 +85,13 @@ export default defineConfig({
             {
               text: '附录',
               items: [
-                { text: '附录 A：命令速查表', link: '/cn/appendix/appendix-a' },
-                { text: '附录 B：配置文件详解', link: '/cn/appendix/appendix-b' },
-                { text: '附录 C：技能开发模板', link: '/cn/appendix/appendix-c' },
-                { text: '附录 D：学习资源汇总', link: '/cn/appendix/appendix-d' },
-                { text: '附录 E：云服务部署指南', link: '/cn/appendix/appendix-e' },
-                { text: '附录 F：社区之声与生态展望', link: '/cn/appendix/appendix-f' },
-                { text: '附录 G：安全防护指南', link: '/cn/appendix/appendix-g' }
+                { text: '附录 A：学习资源汇总', link: '/cn/appendix/appendix-a' },
+                { text: '附录 B：社区之声与生态展望', link: '/cn/appendix/appendix-b' },
+                { text: '附录 C：类 Claw 方案对比与选型', link: '/cn/appendix/appendix-c' },
+                { text: '附录 D：技能开发与发布指南', link: '/cn/appendix/appendix-d' },
+                { text: '附录 E：模型提供商选型指南', link: '/cn/appendix/appendix-e' },
+                { text: '附录 F：命令速查表', link: '/cn/appendix/appendix-f' },
+                { text: '附录 G：配置文件详解', link: '/cn/appendix/appendix-g' }
               ]
             }
           ],
@@ -121,46 +101,26 @@ export default defineConfig({
               items: [
                 { text: '写在开头', link: '/cn/adopt/intro' },
                 {
-                  text: '🔵 光速上手',
+                  text: '🔵 安装',
                   collapsed: false,
                   items: [
                     { text: '第1章 AutoClaw 一键安装', link: '/cn/adopt/chapter1' },
+                    { text: '第2章 OpenClaw 手动安装', link: '/cn/adopt/chapter2' },
                   ]
                 },
                 {
-                  text: '🟢 手动安装',
+                  text: '🟢 场景配置',
                   collapsed: false,
                   items: [
-                    { text: '第2章 手动安装 OpenClaw', link: '/cn/adopt/chapter2' },
-                    { text: '第3章 接入聊天平台', link: '/cn/adopt/chapter3' },
-                  ]
-                },
-                {
-                  text: '🟡 日常使用',
-                  collapsed: false,
-                  items: [
-                    { text: '第4章 命令行与基础配置', link: '/cn/adopt/chapter4' },
-                    { text: '第5章 定时任务', link: '/cn/adopt/chapter5' },
-                    { text: '第6章 技能系统入门', link: '/cn/adopt/chapter6' },
-                    { text: '🦞 龙虾点评', link: '/cn/adopt/lobster-review' },
-                  ]
-                },
-                {
-                  text: '🟠 高级配置',
-                  collapsed: true,
-                  items: [
-                    { text: '第7章 多平台与外部服务', link: '/cn/adopt/chapter7' },
-                    { text: '第8章 多模型与成本优化', link: '/cn/adopt/chapter8' },
-                    { text: '第9章 个性化定制', link: '/cn/adopt/chapter9' },
-                  ]
-                },
-                {
-                  text: '🔴 高级场景',
-                  collapsed: true,
-                  items: [
-                    { text: '第10章 生产环境部署', link: '/cn/adopt/chapter10' },
-                    { text: '第11章 开发者效率提升', link: '/cn/adopt/chapter11' },
-                    { text: '第12章 故障排查与维护', link: '/cn/adopt/chapter12' },
+                    { text: '第3章 Channels 配置', link: '/cn/adopt/chapter3' },
+                    { text: '第4章 Models 配置', link: '/cn/adopt/chapter4' },
+                    { text: '第5章 Agents 配置', link: '/cn/adopt/chapter5' },
+                    { text: '第6章 Tools 配置', link: '/cn/adopt/chapter6' },
+                    { text: '第7章 Gateway 配置', link: '/cn/adopt/chapter7' },
+                    { text: '第8章 远程访问与网络', link: '/cn/adopt/chapter8' },
+                    { text: '第9章 安全防护与威胁模型', link: '/cn/adopt/chapter9' },
+                    { text: '第10章 Web 界面与客户端', link: '/cn/adopt/chapter10' },
+                    { text: '第11章 Onboarding 配置向导', link: '/cn/adopt/chapter11' },
                   ]
                 },
               ]
@@ -168,13 +128,13 @@ export default defineConfig({
             {
               text: '附录',
               items: [
-                { text: '附录 A：命令速查表', link: '/cn/appendix/appendix-a' },
-                { text: '附录 B：配置文件详解', link: '/cn/appendix/appendix-b' },
-                { text: '附录 C：技能开发模板', link: '/cn/appendix/appendix-c' },
-                { text: '附录 D：学习资源汇总', link: '/cn/appendix/appendix-d' },
-                { text: '附录 E：云服务部署指南', link: '/cn/appendix/appendix-e' },
-                { text: '附录 F：社区之声与生态展望', link: '/cn/appendix/appendix-f' },
-                { text: '附录 G：安全防护指南', link: '/cn/appendix/appendix-g' }
+                { text: '附录 A：学习资源汇总', link: '/cn/appendix/appendix-a' },
+                { text: '附录 B：社区之声与生态展望', link: '/cn/appendix/appendix-b' },
+                { text: '附录 C：类 Claw 方案对比与选型', link: '/cn/appendix/appendix-c' },
+                { text: '附录 D：技能开发与发布指南', link: '/cn/appendix/appendix-d' },
+                { text: '附录 E：模型提供商选型指南', link: '/cn/appendix/appendix-e' },
+                { text: '附录 F：命令速查表', link: '/cn/appendix/appendix-f' },
+                { text: '附录 G：配置文件详解', link: '/cn/appendix/appendix-g' }
               ]
             }
           ],
