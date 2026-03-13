@@ -28,11 +28,108 @@
             <path d="M45 15 Q35 5 30 8" stroke="#d84d4d" stroke-width="2" stroke-linecap="round" class="antenna"></path>
             <path d="M75 15 Q85 5 90 8" stroke="#d84d4d" stroke-width="2" stroke-linecap="round" class="antenna"></path>
             <!-- Eyes -->
-            <circle cx="45" cy="35" r="6" fill="#050810" class="eye"></circle>
-            <circle cx="75" cy="35" r="6" fill="#050810" class="eye"></circle>
-            <circle :cx="46 + eyeOffsetX" :cy="34 + eyeOffsetY" r="2" fill="#00e5cc" class="eye-glow"></circle>
-            <circle :cx="76 + eyeOffsetX" :cy="34 + eyeOffsetY" r="2" fill="#00e5cc" class="eye-glow"></circle>
+            <circle :cx="45" :cy="35" :r="hoveredKeyword === 'born' ? 10 : 6" :fill="hoveredKeyword === 'born' ? '#1a1a2e' : '#050810'" class="eye"></circle>
+            <circle :cx="75" :cy="35" :r="hoveredKeyword === 'born' ? 10 : 6" :fill="hoveredKeyword === 'born' ? '#1a1a2e' : '#050810'" class="eye"></circle>
+            <circle :cx="hoveredKeyword === 'born' ? 47 : 46 + eyeOffsetX" :cy="hoveredKeyword === 'born' ? 33 : 34 + eyeOffsetY" :r="hoveredKeyword === 'born' ? 4 : 2" fill="#00e5cc" class="eye-glow"></circle>
+            <circle :cx="hoveredKeyword === 'born' ? 77 : 76 + eyeOffsetX" :cy="hoveredKeyword === 'born' ? 33 : 34 + eyeOffsetY" :r="hoveredKeyword === 'born' ? 4 : 2" fill="#00e5cc" class="eye-glow"></circle>
             <path d="M52 45 Q60 52 68 45" stroke="#ffd3d3" stroke-width="2" stroke-linecap="round" :class="['lobster-smile', { visible: isHappy }]"></path>
+            <!-- Pacifier (奶嘴) - born -->
+            <g v-if="hoveredKeyword === 'born'" class="accessory-pacifier">
+              <ellipse cx="60" cy="55" rx="8" ry="6" fill="#ffb6c1" stroke="#ff69b4" stroke-width="1.5"/>
+              <circle cx="60" cy="55" r="3" fill="#ff69b4"/>
+              <ellipse cx="60" cy="65" rx="4" ry="3" fill="#ff69b4" opacity="0.8"/>
+            </g>
+            <!-- Hairstyles (发型轮播) - pick -->
+            <transition name="hairstyle-fade" mode="out-in">
+              <g v-if="hoveredKeyword === 'pick'" :key="currentHairstyle" :class="['accessory-hairstyle', `hairstyle-${hairstyles[currentHairstyle].id}`]">
+                <!-- 超级赛亚人 -->
+                <template v-if="hairstyles[currentHairstyle].id === 'saiyan'">
+                  <polygon points="45,20 40,-5 50,15" fill="#ffd700"/>
+                  <polygon points="55,18 50,-8 60,12" fill="#ffd700"/>
+                  <polygon points="65,18 60,-10 70,12" fill="#ffd700"/>
+                  <polygon points="75,20 70,-5 80,15" fill="#ffd700"/>
+                  <polygon points="40,25 32,5 45,22" fill="#ffec8b"/>
+                  <polygon points="80,25 88,5 75,22" fill="#ffec8b"/>
+                  <polygon points="50,22 45,-2 55,18" fill="#ffec8b"/>
+                  <polygon points="70,22 75,-2 65,18" fill="#ffec8b"/>
+                  <polygon points="60,15 55,-12 65,15" fill="#fff8dc"/>
+                </template>
+                <!-- 长发飘飘 + 红唇 -->
+                <template v-else-if="hairstyles[currentHairstyle].id === 'long'">
+                  <path d="M35,25 Q25,10 30,-10 Q35,-20 40,-5 Q45,5 45,25" fill="#8B4513"/>
+                  <path d="M45,22 Q40,-15 50,-20 Q55,-15 55,22" fill="#8B4513"/>
+                  <path d="M55,22 Q55,-10 65,-15 Q70,-10 70,22" fill="#8B4513"/>
+                  <path d="M70,25 Q75,5 80,-10 Q85,-20 90,0 Q88,15 85,25" fill="#8B4513"/>
+                  <path d="M30,30 Q20,35 15,50 Q18,55 25,50" fill="#8B4513"/>
+                  <path d="M90,30 Q100,35 105,50 Q102,55 95,50" fill="#8B4513"/>
+                  <ellipse cx="60" cy="52" rx="5" ry="3" fill="#ff1493" class="red-lips"/>
+                </template>
+                <!-- 短发利落 -->
+                <template v-else-if="hairstyles[currentHairstyle].id === 'short'">
+                  <path d="M35,25 Q30,15 35,5 Q40,0 45,10 Q45,20 45,25" fill="#2c2c2c"/>
+                  <path d="M45,22 Q45,5 55,2 Q60,5 60,22" fill="#2c2c2c"/>
+                  <path d="M60,22 Q60,5 70,2 Q75,8 75,22" fill="#2c2c2c"/>
+                  <path d="M75,25 Q80,15 85,5 Q88,10 85,25" fill="#2c2c2c"/>
+                </template>
+                <!-- 莫西干 -->
+                <template v-else-if="hairstyles[currentHairstyle].id === 'mohawk'">
+                  <polygon points="45,22 42,-15 48,20" fill="#ff4444"/>
+                  <polygon points="50,20 48,-20 55,18" fill="#ff4444"/>
+                  <polygon points="55,18 55,-22 62,18" fill="#ff6666"/>
+                  <polygon points="62,18 62,-18 68,20" fill="#ff4444"/>
+                  <polygon points="68,20 70,-15 75,22" fill="#ff4444"/>
+                  <polygon points="48,22 45,-10 52,20" fill="#ff6666"/>
+                  <polygon points="65,20 68,-12 72,22" fill="#ff6666"/>
+                </template>
+                <!-- 卷发摇滚 -->
+                <template v-else-if="hairstyles[currentHairstyle].id === 'curly'">
+                  <circle cx="38" cy="10" r="8" fill="#4a2c2a"/>
+                  <circle cx="50" cy="5" r="9" fill="#4a2c2a"/>
+                  <circle cx="62" cy="3" r="10" fill="#4a2c2a"/>
+                  <circle cx="75" cy="5" r="9" fill="#4a2c2a"/>
+                  <circle cx="85" cy="10" r="8" fill="#4a2c2a"/>
+                  <circle cx="32" cy="20" r="7" fill="#4a2c2a"/>
+                  <circle cx="90" cy="20" r="7" fill="#4a2c2a"/>
+                  <circle cx="42" cy="-2" r="6" fill="#5a3c3a"/>
+                  <circle cx="60" cy="-5" r="7" fill="#5a3c3a"/>
+                  <circle cx="78" cy="-2" r="6" fill="#5a3c3a"/>
+                </template>
+                <!-- 光头强 -->
+                <template v-else-if="hairstyles[currentHairstyle].id === 'bald'">
+                  <ellipse cx="60" cy="12" rx="25" ry="18" fill="#ffe4c4"/>
+                  <ellipse cx="60" cy="15" rx="22" ry="15" fill="#ffdab9"/>
+                  <circle cx="60" cy="8" r="3" fill="#ffcc99" opacity="0.5"/>
+                  <path d="M40,25 Q38,22 42,20" stroke="#ddd" stroke-width="1" fill="none"/>
+                  <path d="M80,25 Q82,22 78,20" stroke="#ddd" stroke-width="1" fill="none"/>
+                </template>
+              </g>
+            </transition>
+            <!-- Graduation Cap (博士帽) - school -->
+            <g v-if="hoveredKeyword === 'school'" class="accessory-gradcap">
+              <rect x="30" y="0" width="60" height="5" fill="#1a1a2e" rx="1"/>
+              <polygon points="60,-12 25,3 60,10 95,3" fill="#1a1a2e"/>
+              <circle cx="60" cy="-12" r="4" fill="#ffd700"/>
+              <line x1="60" y1="-12" x2="85" y2="8" stroke="#ffd700" stroke-width="2"/>
+              <circle cx="85" cy="8" r="3" fill="#ffd700"/>
+              <g class="tassel">
+                <line x1="85" y1="8" x2="85" y2="20" stroke="#ffd700" stroke-width="2"/>
+                <circle cx="85" cy="22" r="3" fill="#ffd700"/>
+                <ellipse cx="82" cy="26" rx="2" ry="4" fill="#ffd700"/>
+                <ellipse cx="85" cy="27" rx="2" ry="4" fill="#ffd700"/>
+                <ellipse cx="88" cy="26" rx="2" ry="4" fill="#ffd700"/>
+              </g>
+            </g>
+            <!-- Sunglasses (圆形大墨镜 + 歪嘴笑) - undefined -->
+            <g v-if="hoveredKeyword === 'undefined'" class="accessory-sunglasses">
+              <circle cx="45" cy="35" r="12" fill="#1a1a2e" stroke="#333" stroke-width="2"/>
+              <circle cx="75" cy="35" r="12" fill="#1a1a2e" stroke="#333" stroke-width="2"/>
+              <circle cx="45" cy="35" r="10" fill="#2a2a4a" opacity="0.6"/>
+              <circle cx="75" cy="35" r="10" fill="#2a2a4a" opacity="0.6"/>
+              <line x1="57" y1="35" x2="63" y2="35" stroke="#333" stroke-width="3"/>
+              <line x1="33" y1="32" x2="25" y2="28" stroke="#333" stroke-width="2"/>
+              <line x1="87" y1="32" x2="95" y2="28" stroke="#333" stroke-width="2"/>
+              <path d="M52 48 Q58 44 68 50" stroke="#ffd3d3" stroke-width="2.5" stroke-linecap="round" class="smirk"/>
+            </g>
             <defs>
               <linearGradient id="lobster-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stop-color="#ff8c8c"></stop>
@@ -48,53 +145,46 @@
           </span>
         </h1>
         
-        <h2 class="!text-6xl md:!text-8xl !leading-none font-black !tracking-[0.12em] uppercase !mt-0 !mb-8 !border-0 !pt-0">
+        <h2 class="!text-6xl md:!text-8xl !leading-none font-black !tracking-[0.12em] uppercase !mt-0 !mb-16 !border-0 !pt-0">
           <span class="animate-gradient-text">
             哈喽！龙虾
-          </span> 👋
+          </span>
+          <span :class="['wave-hand cursor-pointer', { shaking: isWaving }]" @click="triggerWave">👋</span>
         </h2>
 
-        <p class="!text-lg md:!text-2xl text-gray-300 !mt-0 !mb-10 max-w-3xl !leading-relaxed">
+        <!-- 故事导航 -->
+        <div class="story-nav mb-20 max-w-4xl">
+          <p class="!text-xl md:!text-2xl !leading-relaxed text-gray-200 story-text">
+            一个不起眼的仓库里，龙虾<span class="story-keyword story-born" @click="navigateTo('/cn/adopt/intro')" @mouseenter="hoveredKeyword = 'born'" @mouseleave="hoveredKeyword = ''">诞生</span>了。<br>
+            <span class="story-keyword story-pick" @click="navigateTo('/cn/adopt/lobster-review')" @mouseenter="hoveredKeyword = 'pick'" @mouseleave="hoveredKeyword = ''">选一只</span>，送它上<span class="story-keyword story-school" @click="navigateTo('/cn/university/')" @mouseenter="hoveredKeyword = 'school'" @mouseleave="hoveredKeyword = ''">学堂</span>；<br>
+            或动手写一只<span class="story-keyword story-undefined" @click="navigateTo('/cn/build/')" @mouseenter="hoveredKeyword = 'undefined'" @mouseleave="hoveredKeyword = ''">不被定义</span>的龙虾。<br>
+            <span class="text-gray-400">它的梦想，从第一天起就很大:)</span>
+          </p>
+          <!-- 提示文字 - 5秒后渐隐显示 或 悬停时显示跳转目的地 -->
+          <p :class="['hint-text text-sm !mt-8', { 'hint-visible': showHint || hoveredKeyword }]">
+            <span v-if="hoveredKeyword" class="hint-destination">{{ keywordHints[hoveredKeyword] }}</span>
+            <span v-else class="text-gray-500">点击高亮文字可跳转至对应章节</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- 副标题和 New 标签 - 滚动后显示 -->
+      <div v-fade-in class="w-full flex flex-col items-center mt-32 mb-16">
+        <p class="!text-lg md:!text-2xl text-gray-300 !mt-0 !mb-8 max-w-3xl !leading-relaxed text-center">
           从零领养到深度构建，把 OpenClaw 训练成真正会办事的数字龙虾。
         </p>
 
-        <div class="flex flex-col sm:flex-row items-center gap-4 mb-12">
-          <a
-            :href="withBase('/cn/adopt/intro')"
-            class="w-full sm:w-auto group flex items-center justify-center gap-2 bg-[#ff4d4d] hover:bg-[#ff6b6b] text-white font-bold rounded-full py-3 px-7 transition-all duration-300 hover:scale-105 active:scale-95"
-          >
-            领养龙虾 <span class="opacity-80 group-hover:opacity-100 transition-opacity">→</span>
-          </a>
-          <a
-            :href="withBase('/cn/university/')"
-            class="w-full sm:w-auto group flex items-center justify-center gap-2 bg-[#0f1623] hover:bg-white/10 border border-[#ff4d4d]/30 text-white font-bold rounded-full py-3 px-7 transition-all duration-300 hover:scale-105 active:scale-95"
-          >
-            🎓 龙虾大学 <span class="text-[#ff4d4d] group-hover:text-[#ff6b6b] transition-colors">→</span>
-          </a>
-          <a
-            :href="withBase('/cn/build/')"
-            class="w-full sm:w-auto group flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold rounded-full py-3 px-7 transition-all duration-300 hover:scale-105 active:scale-95"
-          >
-            构建龙虾 <span class="text-[#ff4d4d] group-hover:text-[#ff6b6b] transition-colors">→</span>
-          </a>
-          <a
-            href="https://github.com/datawhalechina/hello-claw"
-            target="_blank"
-            class="w-full sm:w-auto group flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold rounded-full py-3 px-7 transition-all duration-300 hover:scale-105 active:scale-95"
-          >
-            GitHub <span class="text-[#ff4d4d] group-hover:text-[#ff6b6b] transition-colors">→</span>
+        <div class="flex justify-center">
+          <a :href="withBase('/cn/build/chapter7')" class="group flex items-center gap-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full py-2 px-4 md:px-6 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer">
+            <span class="bg-[#ff4d4d] text-white text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+              New
+            </span>
+            <span class="text-sm md:text-base text-gray-300 group-hover:text-white transition-colors">
+              构建篇第 7-9 章上线：轻量化 / 安全加固 / 硬件方案
+            </span>
+            <span class="text-gray-500 group-hover:text-white transition-colors">→</span>
           </a>
         </div>
-
-        <a :href="withBase('/cn/build/chapter7')" class="group flex items-center gap-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full py-2 px-4 md:px-6 transition-all duration-300 mb-20 hover:scale-105 active:scale-95 cursor-pointer">
-          <span class="bg-[#ff4d4d] text-white text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
-            New
-          </span>
-          <span class="text-sm md:text-base text-gray-300 group-hover:text-white transition-colors">
-            构建篇第 7-9 章上线：轻量化 / 安全加固 / 硬件方案
-          </span>
-          <span class="text-gray-500 group-hover:text-white transition-colors">→</span>
-        </a>
       </div>
 
       <div v-fade-in class="w-full max-w-5xl">
@@ -486,12 +576,77 @@ clawhub install github</pre>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useRoute, withBase } from 'vitepress'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { useRoute, useRouter, withBase } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 
 const { Layout } = DefaultTheme
 const route = useRoute()
+const router = useRouter()
+
+const navigateTo = (path) => {
+  clearHintTimer()
+  router.go(withBase(path))
+}
+
+const isWaving = ref(false)
+const triggerWave = () => {
+  isWaving.value = true
+  setTimeout(() => {
+    isWaving.value = false
+  }, 600)
+}
+
+const showHint = ref(false)
+const hoveredKeyword = ref('')
+const currentHairstyle = ref(0)
+
+const hairstyles = [
+  { id: 'saiyan', name: '超级赛亚人' },
+  { id: 'long', name: '长发飘飘' },
+  { id: 'short', name: '短发利落' },
+  { id: 'mohawk', name: '莫西干' },
+  { id: 'curly', name: '卷发摇滚' },
+  { id: 'bald', name: '光头强' },
+]
+
+let hairstyleTimer = null
+
+watch(hoveredKeyword, (newVal) => {
+  if (newVal === 'pick') {
+    currentHairstyle.value = 0
+    hairstyleTimer = setInterval(() => {
+      currentHairstyle.value = (currentHairstyle.value + 1) % hairstyles.length
+    }, 3500)
+  } else {
+    if (hairstyleTimer) {
+      clearInterval(hairstyleTimer)
+      hairstyleTimer = null
+    }
+  }
+})
+
+const keywordHints = {
+  born: '🦞 领养龙虾：从零到一领取你的第一个龙虾',
+  pick: '📖 龙虾点评：哪种龙虾最适合你？',
+  school: '🎓 龙虾大学：让龙虾在这变聪明，茁壮成长',
+  undefined: '🛠️ 构建龙虾：理解 OpenClaw 实现，写一个自己的龙虾',
+}
+
+let hintTimer = null
+
+const startHintTimer = () => {
+  hintTimer = setTimeout(() => {
+    showHint.value = true
+  }, 10000)
+}
+
+const clearHintTimer = () => {
+  if (hintTimer) {
+    clearTimeout(hintTimer)
+    hintTimer = null
+  }
+}
 const isHome = computed(() => {
   const path = route.path
   return path === '/' || path === '/index.html' || 
@@ -755,10 +910,24 @@ const updateEyeTracking = (event) => {
 
 onMounted(() => {
   window.addEventListener('mousemove', updateEyeTracking)
+  // 重置提示状态并启动计时器
+  showHint.value = false
+  startHintTimer()
 })
 
 onUnmounted(() => {
   window.removeEventListener('mousemove', updateEyeTracking)
+  clearHintTimer()
+})
+
+// 监听路由变化，返回首页时重置提示
+watch(() => route.path, (newPath) => {
+  if (newPath === '/' || newPath === '/index.html' || 
+      newPath === '/hello-claw/' || newPath === '/hello-claw/index.html') {
+    showHint.value = false
+    clearHintTimer()
+    startHintTimer()
+  }
 })
 
 // Simple intersection observer for fade-in animations
@@ -846,6 +1015,108 @@ const vFadeIn = {
 .lobster-smile.visible {
   opacity: 1;
 }
+.accessory-pacifier {
+  animation: pacifier-bounce 1s ease-in-out infinite;
+}
+@keyframes pacifier-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+.accessory-gradcap {
+  animation: gradcap-tilt 2s ease-in-out infinite;
+  transform-origin: center top;
+}
+.accessory-gradcap .tassel {
+  animation: tassel-swing 1.5s ease-in-out infinite;
+  transform-origin: 85px 8px;
+}
+@keyframes tassel-swing {
+  0%, 100% { transform: rotate(-15deg); }
+  50% { transform: rotate(15deg); }
+}
+@keyframes gradcap-tilt {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+.accessory-sunglasses {
+  animation: sunglasses-cool 1.5s ease-in-out infinite;
+}
+.accessory-sunglasses .smirk {
+  animation: smirk-wiggle 2s ease-in-out infinite;
+}
+@keyframes smirk-wiggle {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(1px); }
+}
+@keyframes sunglasses-cool {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-1px); }
+}
+.hairstyle-fade-enter-active,
+.hairstyle-fade-leave-active {
+  transition: all 0.3s ease;
+}
+.hairstyle-fade-enter-from {
+  opacity: 0;
+  transform: scale(0.8);
+}
+.hairstyle-fade-leave-to {
+  opacity: 0;
+  transform: scale(1.1);
+}
+.accessory-hairstyle {
+  animation: hair-bounce 0.5s ease-in-out infinite;
+}
+.hairstyle-saiyan {
+  animation: saiyan-power 0.3s ease-in-out infinite;
+}
+@keyframes saiyan-power {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.08); }
+}
+.hairstyle-long {
+  animation: long-hair-sway 1.5s ease-in-out infinite;
+  transform-origin: top center;
+}
+@keyframes long-hair-sway {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+.hairstyle-long .red-lips {
+  animation: lips-pout 2s ease-in-out infinite;
+}
+@keyframes lips-pout {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+.hairstyle-short {
+  animation: short-bounce 0.8s ease-in-out infinite;
+}
+@keyframes short-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+.hairstyle-mohawk {
+  animation: mohawk-pulse 0.4s ease-in-out infinite;
+}
+@keyframes mohawk-pulse {
+  0%, 100% { transform: scaleX(1); }
+  50% { transform: scaleX(1.1); }
+}
+.hairstyle-curly {
+  animation: curly-shake 1.2s ease-in-out infinite;
+}
+@keyframes curly-shake {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+.hairstyle-bald {
+  animation: bald-shine 2s ease-in-out infinite;
+}
+@keyframes bald-shine {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.15); }
+}
 @keyframes happy-bounce {
   0% { transform: translateY(0) scale(1); }
   20% { transform: translateY(-16px) scale(1.06); }
@@ -885,4 +1156,118 @@ const vFadeIn = {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
+
+/* 挥手抖动动画 */
+.wave-hand {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.wave-hand:hover {
+  transform: scale(1.2);
+}
+
+.wave-hand.shaking {
+  animation: hand-shake 0.6s ease-in-out;
+}
+
+@keyframes hand-shake {
+  0%, 100% { transform: rotate(0deg); }
+  10% { transform: rotate(-20deg); }
+  20% { transform: rotate(20deg); }
+  30% { transform: rotate(-20deg); }
+  40% { transform: rotate(20deg); }
+  50% { transform: rotate(-15deg); }
+  60% { transform: rotate(15deg); }
+  70% { transform: rotate(-10deg); }
+  80% { transform: rotate(10deg); }
+  90% { transform: rotate(-5deg); }
+}
+
+/* 提示文字动画 - 闪烁渐隐效果 */
+.hint-text {
+  opacity: 0;
+  text-align: center;
+  transition: opacity 1.2s ease-out;
+  min-height: 1.5em;
+}
+
+.hint-text.hint-visible {
+  opacity: 1;
+  animation: hint-pulse 4s ease-in-out infinite;
+}
+
+@keyframes hint-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* 跳转目的地提示样式 */
+.hint-destination {
+  color: rgba(255, 130, 130, 0.9);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================================
+   故事导航样式 - 诗意融入版
+   ============================================================================ */
+
+.story-nav {
+  text-align: center;
+}
+
+.story-text {
+  font-family: 'PingFang SC', 'Microsoft YaHei', 'Noto Serif SC', serif;
+  letter-spacing: 0.05em;
+  line-height: 2.2;
+}
+
+.story-keyword {
+  position: relative;
+  display: inline;
+  cursor: pointer;
+  font-weight: 400;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+.story-keyword::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0.5;
+}
+
+.story-keyword:hover::after {
+  width: 100%;
+}
+
+.story-keyword:hover {
+  letter-spacing: 0.08em;
+}
+
+/* 统一红色系 - 与龙虾主题呼应 */
+.story-born,
+.story-pick,
+.story-school,
+.story-undefined {
+  color: rgba(255, 130, 130, 0.75);
+}
+
+.story-born:hover,
+.story-pick:hover,
+.story-school:hover,
+.story-undefined:hover {
+  color: #ff8282;
+  text-shadow: 0 0 25px rgba(255, 130, 130, 0.4);
+}
+
+
 </style>
