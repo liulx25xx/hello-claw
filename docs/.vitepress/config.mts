@@ -67,15 +67,27 @@ export default defineConfig({
                   ]
                 },
                 {
-                  text: '🟢 场景配置',
+                  text: '🟢 核心配置',
                   collapsed: false,
                   items: [
                     { text: '第4章 聊天平台接入', link: '/cn/adopt/chapter4' },
                     { text: '第5章 模型管理', link: '/cn/adopt/chapter5' },
                     { text: '第6章 智能体管理', link: '/cn/adopt/chapter6' },
+                  ]
+                },
+                {
+                  text: '🟡 扩展运维',
+                  collapsed: false,
+                  items: [
                     { text: '第7章 工具与定时任务', link: '/cn/adopt/chapter7' },
                     { text: '第8章 网关运维', link: '/cn/adopt/chapter8' },
                     { text: '第9章 远程访问与网络', link: '/cn/adopt/chapter9' },
+                  ]
+                },
+                {
+                  text: '🔴 安全与客户端',
+                  collapsed: false,
+                  items: [
                     { text: '第10章 安全防护与威胁模型', link: '/cn/adopt/chapter10' },
                     { text: '第11章 Web 界面与客户端', link: '/cn/adopt/chapter11' },
                   ]
@@ -110,15 +122,27 @@ export default defineConfig({
                   ]
                 },
                 {
-                  text: '🟢 场景配置',
+                  text: '🟢 核心配置',
                   collapsed: false,
                   items: [
                     { text: '第4章 聊天平台接入', link: '/cn/adopt/chapter4' },
                     { text: '第5章 模型管理', link: '/cn/adopt/chapter5' },
                     { text: '第6章 智能体管理', link: '/cn/adopt/chapter6' },
+                  ]
+                },
+                {
+                  text: '🟡 扩展运维',
+                  collapsed: false,
+                  items: [
                     { text: '第7章 工具与定时任务', link: '/cn/adopt/chapter7' },
                     { text: '第8章 网关运维', link: '/cn/adopt/chapter8' },
                     { text: '第9章 远程访问与网络', link: '/cn/adopt/chapter9' },
+                  ]
+                },
+                {
+                  text: '🔴 安全与客户端',
+                  collapsed: false,
+                  items: [
                     { text: '第10章 安全防护与威胁模型', link: '/cn/adopt/chapter10' },
                     { text: '第11章 Web 界面与客户端', link: '/cn/adopt/chapter11' },
                   ]
