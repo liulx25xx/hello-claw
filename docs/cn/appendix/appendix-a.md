@@ -104,7 +104,6 @@ next:
 | 资源 | 地址 | 说明 |
 |------|------|------|
 | ⭐ Docker 部署指南 | <https://blog.csdn.net/LYX_WIN/article/details/157993447> | GPU / CPU 双路径容器化部署完整教程 |
-| Mac Docker 部署 | <https://www.toutiao.com/group/7613726227169395206> | 5 分钟在 Docker 中跑起 OpenClaw |
 | OpenClaw KasmVNC | <https://github.com/ddong8/openclaw-kasmvnc> | 浏览器远程桌面一键部署，带完整容器管理 |
 
 ### 3.3 云端与一键部署
@@ -123,8 +122,7 @@ next:
 
 | 资源 | 地址 | 说明 |
 |------|------|------|
-| Windows 安装教程 | <https://www.toutiao.com/group/7614711135060754971> | 保姆级 PowerShell 安装指南 |
-| 沙盒模式配置 | <https://www.toutiao.com/group/7607625142893625883> | Docker 容器隔离与文件系统保护 |
+| 沙盒模式配置 | <https://www.toutiao.com/article/7607625142893625883> | Docker 容器隔离与文件系统保护 |
 
 > 详见[第二章 OpenClaw 手动安装](/cn/adopt/chapter2/)。
 
@@ -133,8 +131,8 @@ next:
 | 资源 | 地址 | 说明 |
 |------|------|------|
 | llama.cpp 部署 | <https://blog.csdn.net/Honmaple/article/details/157693340> | WSL2 环境本地大模型部署教程 |
-| Ollama 集成 | <https://www.toutiao.com/group/7602483142699516435> | 国产算力适配与工具链生态 |
-| MiniMax + 飞书 | <https://www.toutiao.com/group/7612259016139391503> | 国产模型本地 Agent 部署方案 |
+| Ollama 集成 | <https://www.toutiao.comw.toutiao.com/article/7602483142699516435> | 国产算力适配与工具链生态 |
+| MiniMax + 飞书 | <https://www.toutiao.com/article/7612259016139391503> | 国产模型本地 Agent 部署方案 |
 
 > 详见[第五章 模型管理](/cn/adopt/chapter5/)。
 
@@ -146,10 +144,8 @@ next:
 
 | 资源 | 地址 | 覆盖平台 |
 |------|------|---------|
-| ⭐ 飞书集成指南 | <https://www.toutiao.com/group/7614370801759912486> | 飞书官方插件完整指南 |
+| ⭐ 飞书集成指南 | <https://www.toutiao.com/article/7614370801759912486> | 飞书官方插件完整指南 |
 | 飞书部署教程 | <https://blog.csdn.net/m0_55049655/article/details/158623550> | CSDN 企业级飞书部署完整教程 |
-| 微信 / Telegram / Discord | <https://www.toutiao.com/group/7610316711539950132> | 多平台消息通道配置 |
-| Slack / Signal / iMessage | <https://www.toutiao.com/group/7614458834022613544> | 企业 IM 集成方案 |
 
 > 详见[第四章 Chat Provider 配置](/cn/adopt/chapter4/)。
 
@@ -164,15 +160,14 @@ next:
 | 资源 | 地址 | 说明 |
 |------|------|------|
 | ⭐ Awesome OpenClaw Skills | <https://github.com/VoltAgent/awesome-openclaw-skills> | 5,490+ Skills 集合，已过滤 6,940 个垃圾插件 |
-| 2026 必装 Skills 推荐 | <https://www.toutiao.com/group/7611601860910236179> | 4 个核心技能安装与配置 |
+| 2026 必装 Skills 推荐 | <https://www.toutiao.com/article/7611601860910236179> | 4 个核心技能安装与配置 |
 | 插件安装指南 | <https://www.php.cn/faq/2161325.html> | CLI 扩展功能添加步骤说明 |
 
 ### 5.2 技能开发教程
 
 | 资源 | 地址 | 说明 |
 |------|------|------|
-| ⭐ Skills 配置手把手教程 | <https://www.toutiao.com/group/7612296579612983846> | 专业化工作流与工具集成 |
-| 前端开发者技能库搭建 | <https://www.toutiao.com/group/7614486886799426088> | 从入门到进阶实战 |
+| ⭐ Skills 配置手把手教程 | <https://www.toutiao.com/article/7612296579612983846> | 专业化工作流与工具集成 |
 
 > 详见[附录 D：技能开发模板](/cn/appendix/appendix-d)。
 
@@ -195,19 +190,15 @@ next:
 
 | 资源 | 地址 | 说明 |
 |------|------|------|
-| ⭐ 完整架构全解 | <https://www.toutiao.com/group/7610063314768446006> | AI 私人助理工作流程详解 |
-| OpenClaw 架构解析 | <https://www.toutiao.com/group/7602243573023425060> | 智能体执行、工具调用、浏览器操作底层逻辑 |
-| 意图与对话管理 | <https://www.toutiao.com/group/7610070344208073259> | NLP 识别与槽位填充实战 |
-| 分布式 AI 代理 | <https://www.toutiao.com/group/7614498988393333294> | 跨设备联动与多 Agent 协作 |
+| OpenClaw 架构解析 | <https://www.toutiao.com/article/7602243573023425060> | 智能体执行、工具调用、浏览器操作底层逻辑 |
+| 意图与对话管理 | <https://www.toutiao.com/article/7610070344208073259> | NLP 识别与槽位填充实战 |
 
 ### 6.2 记忆系统与知识库
 
 | 资源 | 地址 | 说明 |
 |------|------|------|
-| ⭐ 记忆系统深度拆解 | <https://www.toutiao.com/group/7603715229905666569> | 长期 / 精炼记忆工作原理 |
-| 记忆系统架构解析 | <https://www.toutiao.com/group/7606549081040667188> | Markdown 到混合检索实现 |
-| Mem0 集成方案 | <https://www.toutiao.com/group/7613455137884946959> | 省 Token 的智能记忆管理 |
-| 知识库构建 | <https://www.toutiao.com/group/7612927848772272667> | SOP 与知识库最佳实践 |
+| Mem0 集成方案 | <https://www.toutiao.com/article/7613455137884946959> | 省 Token 的智能记忆管理 |
+| 知识库构建 | <https://www.toutiao.com/article/7612927848772272667> | SOP 与知识库最佳实践 |
 | ⭐ Memory LanceDB Pro | <https://github.com/win4r/memory-lancedb-pro> | 增强型长期记忆插件，支持混合检索和跨编码器重排序 |
 | Agent Second Brain | <https://github.com/AgentSecondBrain/memU> | 完整的第二大脑系统，语音笔记 → Obsidian + Todoist |
 | Obsidian Vault RAG | <https://github.com/Obsidian68/vault-rag> | OpenClaw 连接 Obsidian 知识库，实时 Markdown 索引 |
@@ -216,8 +207,8 @@ next:
 
 | 资源 | 地址 | 说明 |
 |------|------|------|
-| ⭐ OpenClaw + Playwright | <https://www.toutiao.com/group/7614706712441487915> | 自然语言驱动浏览器自动化 |
-| 浏览器自动化技能 | <https://www.toutiao.com/group/7613585763871080969> | browser-automation 技能使用指南 |
+| ⭐ OpenClaw + Playwright | <https://www.toutiao.com/article/7614706712441487915> | 自然语言驱动浏览器自动化 |
+| 浏览器自动化技能 | <https://www.toutiao.com/article/7613585763871080969> | browser-automation 技能使用指南 |
 | Agent-Browser | <https://github.com/vercel-labs/agent-browser> | Vercel 开源 AI 代理浏览器工具 |
 | MCP Server 集成 | <https://blog.csdn.net/LYX_WIN/article/details/157993447> | Playwright MCP 浏览器自动化 |
 
@@ -226,7 +217,7 @@ next:
 
 | 资源 | 地址 | 说明 |
 |------|------|------|
-| WSLg + 指纹绕过 | <https://www.toutiao.com/group/7605101648096018978> | 动态伪装浏览器指纹反爬 |
+| WSLg + 指纹绕过 | <https://www.toutiao.com/article/7605101648096018978> | 动态伪装浏览器指纹反爬 |
 
 > **注意**：浏览器指纹绕过技术存在法律与道德风险，请仅用于合法的安全研究与测试目的。
 
@@ -236,8 +227,7 @@ next:
 
 | 资源 | 地址 | 说明 |
 |------|------|------|
-| ⭐ 自动化工作流实操 | <https://www.toutiao.com/group/7614476588058427946> | 从配置到 3 个核心场景实战 |
-| 自动化办公指南 | <https://www.toutiao.com/group/7614155545884328499> | 文件处理与团队协作场景 |
+| 自动化办公指南 | <https://www.toutiao.com/article/7614155545884328499> | 文件处理与团队协作场景 |
 | awesome-usecases 详解 | <https://blog.csdn.net/yangshangwei/article/details/158314655> | 30+ 真实可运行场景 |
 
 ### 6.5 安全最佳实践
@@ -263,8 +253,7 @@ next:
 
 | 资源 | 地址 | 说明 |
 |------|------|------|
-| Clawdbot → Moltbot → OpenClaw | <https://www.toutiao.com/group/7601730056133804571> | 历史版本部署实战汇总 |
-| 从新手到中级教程 | <https://www.toutiao.com/group/7613221725324444202> | 沙盒模式与工作空间探索 |
+| Clawdbot → Moltbot → OpenClaw | <https://www.toutiao.com/article/7601730056133804571> | 历史版本部署实战汇总 |
 
 ---
 
@@ -313,8 +302,6 @@ next:
 | ⭐ Awesome OpenClaw | <https://github.com/SamurAIGPT/awesome-openclaw> | 最全面的资源汇总，100+ 项目链接 |
 | CoClaw 社区资源中心 | <https://coclaw.com> | 社区维护的 OpenClaw 资源枢纽，覆盖指南、排错、配置生成与专题文章（非官方） |
 | 用例集合 | <https://github.com/hesamsheikh/awesome-openclaw-usecases> | 社区应用案例，36 个真实场景验证 |
-| OpenClaw 生态 TOP6 工具 | <https://www.toutiao.com/group/7613671784054866473> | 部署、托管、监控一站式方案 |
-
 ---
 
 ## 推荐学习路径
