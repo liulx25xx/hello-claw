@@ -65,7 +65,7 @@ OpenClaw 的爆发催生了一个庞大的"龙虾生态"——从开源框架到
 | 钉钉生态协同 | [阿里 CoPaw](https://copaw.bot/)（[GitHub](https://github.com/agentscope-ai/CoPaw)） | 钉钉原生集成，开源免费 |
 | 飞书生态协同 | [字节 ArkClaw](https://www.volcengine.com/experience/ark?mode=claw) | 飞书深度集成 + Doubao-Seed-2.0 |
 | 做 QQ 机器人 | [腾讯云](#_6-云厂商一键部署) 一键部署 | QQ 开放平台深度集成 |
-| 一键安装 / 跨境出海 | [猎豹 EasyClaw](https://easyclaw.cn)（[国际版](https://easyclaw.com)） | 傅盛同款技能包，双击安装零配置，兼顾国内与出海 |
+| 一键安装 / 跨境出海 | [猎豹 EasyClaw](https://easyclaw.cn)（[国际版](https://easyclaw.com)） | 傅盛同款技能包，针对营销/小红书优化，双击安装零配置，兼顾国内与出海 |
 | 只想用不想管 | [ArkClaw](https://www.volcengine.com/experience/ark?mode=claw) / [Kimi Claw](https://kimi.com) | 云端全托管，注册即用 |
 | 想完全掌控配置 | [OpenClaw](https://github.com/openclaw/openclaw) 手动安装 | 本教程主线方案 |
 | 安全敏感 / 企业内网 | [IronClaw](https://www.ironclaw.com)（[GitHub](https://github.com/nearai/ironclaw)） | WASM 沙盒 + 零遥测，Rust 安全重写 |
