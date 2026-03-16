@@ -9,8 +9,6 @@ next:
 
 # 附录 C：类 Claw 方案对比与选型指南
 
-> 最后更新：2026-03-13 | 价格与功能可能随时调整，请以各产品官网最新信息为准。
-
 OpenClaw 的爆发催生了一个庞大的"龙虾生态"——从开源框架到商业托管、从桌面客户端到嵌入式设备、从个人助手到企业级多智能体平台。本附录系统梳理所有主流类 Claw 方案，帮你根据自身需求快速选型。
 
 **目录**
@@ -412,6 +410,8 @@ psql -d ironclaw -c 'CREATE EXTENSION IF NOT EXISTS vector;'
 | **HiClaw** | Docker | Higress 社区多智能体协作平台，Manager-Worker 架构，人在回路中，内置 Matrix 服务器 | [higress-group/hiclaw](https://github.com/higress-group/hiclaw) |
 | **GenericAgent** | Python | 复旦 A3 实验室极简自主 Agent，自组织/自学习/自进化，可自动安装/卸载 OpenClaw 等复杂系统 | [lsdefine/pc-agent-loop](https://github.com/lsdefine/pc-agent-loop) |
 | **ClawRouter** | TypeScript | Agent 原生 LLM 智能路由，41+ 模型本地零延迟自动选路，ECO/AUTO/PREMIUM 三档省 92% 成本 | [BlockRunAI/ClawRouter](https://github.com/BlockRunAI/ClawRouter) |
+| **nanobot** | Python | 港科大 HKUDS 出品，代码量仅 OpenClaw 1%，研究友好，pip 一键安装，支持 10+ IM 渠道 | [HKUDS/nanobot](https://github.com/HKUDS/nanobot) |
+
 
 <details>
 <summary>各轻量方案适用场景</summary>
@@ -424,6 +424,8 @@ psql -d ironclaw -c 'CREATE EXTENSION IF NOT EXISTS vector;'
 - **HiClaw**：Higress 社区多智能体协作平台（[官网](https://hiclaw.org/)），Manager-Worker 架构，基于 Matrix 协议通信，人在回路中。凭证存储在 AI 网关，支持多种 Agent 运行时。适合**多智能体团队协作**。
 - **ClawRouter**：Agent 原生 LLM 智能路由器，本地 <1ms 自动选路，41+ 模型，三档路由策略（ECO/AUTO/PREMIUM）可省 92% 成本。适合**自建部署中优化多模型成本**。
 - **GenericAgent**：复旦 A3 实验室极简自主 Agent，自组织/自学习/自进化，不依赖预定义工具链，能自主完成 OpenClaw 安装与卸载。提供[一键安装版](https://github.com/lsdefine/pc-agent-loop/release)。适合**通用自主 Agent 研究**。
+- **nanobot**：港科大 HKUDS 出品（[GitHub](https://github.com/HKUDS/nanobot)），代码量仅 OpenClaw 的 1%，`pip install nanobot-ai` 一键安装（Python ≥ 3.11）。支持 Telegram/Discord/WhatsApp/飞书/QQ/钉钉/企微等 10+ IM 渠道，内置 Web 搜索、定时任务和记忆管理。适合**学术研究和快速原型验证**。
+
 
 </details>
 
@@ -439,6 +441,7 @@ psql -d ironclaw -c 'CREATE EXTENSION IF NOT EXISTS vector;'
 | **HiClaw** | Docker | ★★☆☆☆ | 中 | ★★★★☆ | ★★★☆☆ | ★★★★★ | ★★★☆☆ | 团队协作 |
 | **GenericAgent** | Python | ★☆☆☆☆ | 低 | ★★★☆☆ | ★☆☆☆☆ | 无 | ★☆☆☆☆ | 通用自主Agent |
 | **ClawRouter** | TypeScript | ★★☆☆☆ | 低 | ★★★★☆ | — | 无 | — | 多模型路由/降本 |
+| **nanobot** | Python | ★☆☆☆☆ | 低 | ★★★☆☆ | ★★☆☆☆ | 无 | ★★★★☆ | 学术研究/快速原型 |
 
 ---
 
